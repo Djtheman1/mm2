@@ -38,14 +38,14 @@ export default function SignUpPage() {
           transition={{ duration: 0.5 }}
           className="mb-8 w-full max-w-[300px]" // Increased from 200px to 300px
         >
-          <Image
+          {/* <Image
             src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mm2ameth%20logo-VoAzqTu673RsahvGnNPAA5wAWihVCs.png"
             alt="MM2 Amethyst Logo"
             width={300} // Increased from 200 to 300
             height={120} // Increased proportionally
             priority
             className="h-auto w-full"
-          />
+          /> */}
         </motion.div>
 
         <motion.div
