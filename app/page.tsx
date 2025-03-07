@@ -1,8 +1,5 @@
-import SignUpPage from "@/components/signup-page/signup-page";
-import Image from "next/image";
+import SignUpPage from "@/components/signup-page/page";
 
-export default function Home() {
-  return (
-<SignUpPage />
-  );
+export default function SignUp() {
+  return <SignUpPage />;
 }
