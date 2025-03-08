@@ -10,7 +10,6 @@ import { Label } from "@/components/ui/label";
 import { CopyIcon } from "lucide-react";
 import { FloatingCrystal } from "@/components/floating-crystal";
 import { useRouter } from "next/navigation";
-
 export default function SignUpPage() {
   const router = useRouter();
   const [bioText] = useState("I verify that this is my MM2 Amethyst account");
