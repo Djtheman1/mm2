@@ -6,21 +6,13 @@ import { motion } from "framer-motion";
 import {
   Home,
   Trophy,
-  Diamond,
+  HandCoins,
   HelpCircle,
   FileText,
+  Settings,
+  ShipWheel,
   ChevronLeft,
   ChevronRight,
-  ShoppingCart,
-  BarChart2,
-  Users,
-  Zap,
-  Settings,
-  CoinsIcon,
-  Coins,
-  HandCoins,
-  CogIcon,
-  ShipWheel,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,12 +25,9 @@ import { cn } from "@/lib/utils";
 
 const navigation = [
   { name: "Home", href: "/", icon: Home },
-  { name: "Marketplace", href: "/marketplace", icon: ShoppingCart },
   { name: "CoinFlip", href: "/trading", icon: HandCoins },
   { name: "Leaderboard", href: "/leaderboard", icon: Trophy },
   { name: "Jackpot", href: "/jackpot", icon: ShipWheel },
-  { name: "Community", href: "/community", icon: Users },
-  { name: "Events", href: "/events", icon: Zap },
   { name: "FAQ", href: "/faq", icon: HelpCircle },
   { name: "Terms of Service", href: "/terms", icon: FileText },
   { name: "Settings", href: "/settings", icon: Settings },
@@ -110,6 +99,6 @@ export function Sidebar() {
           </nav>
         </TooltipProvider>
       </div>
-      </div>
+    </div>
   );
 }
