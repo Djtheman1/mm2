@@ -20,11 +20,11 @@ export function Hero() {
   return (
     <section ref={ref} className="py-20 md:py-32 relative overflow-hidden">
       <motion.div className="absolute inset-0 z-0" style={{ y, opacity }}>
-        <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-pink-500/20 to-purple-600/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-gradient-to-br from-indigo-500/20 to-blue-600/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 left-1/2 w-[500px] h-[500px] bg-gradient-to-br from-pink-500/20 to-purple-600/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 left-2/5 w-[400px] h-[400px] bg-gradient-to-br from-indigo-500/20 to-blue-600/20 rounded-full blur-3xl"></div>
       </motion.div>
 
-      <div className="container mx-auto px-40 relative z-10">
+      <div className="container mx-auto px-12 relative z-10">
         <div className="flex flex-col md:flex-row items-center">
           <motion.div
             className="md:w-1/2 mb-10 md:mb-0"
@@ -55,7 +55,7 @@ export function Hero() {
             </div>
           </motion.div>
 
-          { <motion.div
+          <motion.div
             className="md:w-1/2 relative"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -71,7 +71,7 @@ export function Hero() {
                 className="animate-float"
               />
             </div>
-          </motion.div> }
+          </motion.div>
         </div>
       </div>
     </section>

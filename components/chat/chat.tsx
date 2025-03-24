@@ -1,41 +1,21 @@
-"use client";
+"use client"
 
-import type React from "react";
-import { useState, useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Card } from "@/components/ui/card";
-import { UsersOnline } from "@/components/users-online/users-online";
-import { Smile, Send, X, Minimize, Maximize } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type React from "react"
 
-const EMOJIS = [
-  "😊",
-  "😂",
-  "❤️",
-  "👍",
-  "🔥",
-  "✨",
-  "🎮",
-  "🎯",
-  "🎲",
-  "🎁",
-  "💎",
-  "🔪",
-  "🔫",
-];
+import * as Popover from "@radix-ui/react-popover"
+import { useState, useRef, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Card } from "@/components/ui/card"
+import { Smile, Send, ChevronRight, MessageSquare, X, Users } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { useMediaQuery } from "@/hooks/use-media-query"
+
+const EMOJIS = ["😊", "😂", "❤️", "👍", "🔥", "✨", "🎮", "🎯", "🎲", "🎁", "💎", "🔪", "🔫"]
 
 export function Chat() {
-  const [messages, setMessages] = useState<
-    { user: string; text: string; timestamp: Date }[]
-  >([
+  const [messages, setMessages] = useState<{ user: string; text: string; timestamp: Date }[]>([
     {
       user: "System",
       text: "Welcome to MM2 Amethyst chat! Please be respectful to other users.",
@@ -51,202 +31,243 @@ export function Chat() {
       text: "I have one, what's your offer?",
       timestamp: new Date(Date.now() - 60000),
     },
-  ]);
-  const [input, setInput] = useState("");
-  const [minimized, setMinimized] = useState(false);
-  const [activeTab, setActiveTab] = useState("global");
-  const scrollRef = useRef<HTMLDivElement>(null);
+  ])
+  const [input, setInput] = useState("")
+  const [isChatVisible, setIsChatVisible] = useState(true)
+  const [isFullyCollapsed, setIsFullyCollapsed] = useState(false)
+  const [userCount, setUserCount] = useState(42) // Initial user count
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const isMobile = useMediaQuery("(max-width: 768px)")
+
+  // Simulate random user count changes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Random fluctuation between -2 and +3
+      const change = Math.floor(Math.random() * 6) - 2
+      setUserCount((prev) => Math.max(12, prev + change))
+    }, 8000) // Change every 8 seconds
+
+    return () => clearInterval(interval)
+  }, [])
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
-  }, [messages]);
+  }, [messages])
+
+  // Handle the animation completion
+  const handleAnimationComplete = () => {
+    if (!isChatVisible) {
+      setIsFullyCollapsed(true)
+    } else {
+      setIsFullyCollapsed(false)
+    }
+  }
 
   const sendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (input.trim()) {
-      setMessages([
-        ...messages,
-        { user: "User123", text: input, timestamp: new Date() },
-      ]);
-      setInput("");
+      setMessages([...messages, { user: "User123", text: input, timestamp: new Date() }])
+      setInput("")
     }
-  };
+  }
 
   const addEmoji = (emoji: string) => {
-    setInput((prev) => prev + emoji);
-  };
+    setInput((prev) => prev + emoji)
+  }
 
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  };
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+  }
+
+  // Calculate chat width based on screen size - more compact now
+  const getChatWidth = () => {
+    if (isMobile) {
+      return "70vw" // Reduced from 85vw
+    }
+    return "300px" // Reduced from 380px
+  }
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.3 }}
-        className="relative"
-      >
-        <Card
-          className={`border-purple-700/30 bg-purple-950/80 backdrop-blur-md shadow-xl flex flex-col transition-all duration-300 ${
-            minimized ? "w-64 h-12" : "w-80 h-[500px]"
-          }`}
-        >
-          <div className="p-3 border-b border-purple-700/30 flex justify-between items-center">
-            <h2 className="font-semibold text-purple-100 flex items-center">
-              Chat
-              {!minimized && <UsersOnline />}
-            </h2>
-            <div className="flex items-center space-x-1">
-              <Button
-                size="icon"
-                variant="ghost"
-                className="h-6 w-6 text-purple-300 hover:text-purple-100"
-                onClick={() => setMinimized(!minimized)}
-              >
-                {minimized ? (
-                  <Maximize className="h-3 w-3" />
-                ) : (
-                  <Minimize className="h-3 w-3" />
-                )}
-              </Button>
-              {!minimized && (
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="h-6 w-6 text-purple-300 hover:text-purple-100"
-                >
-                  <X className="h-3 w-3" />
-                </Button>
-              )}
-            </div>
-          </div>
+    <>
+      {/* Toggle button that appears when chat is collapsed - now at bottom right */}
+      <AnimatePresence>
+        {isFullyCollapsed && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.2 }}
+            className="fixed bottom-20 right-6 z-50"
+          >
+            <Button
+              onClick={() => setIsChatVisible(true)}
+              className="rounded-full h-12 w-12 bg-gradient-to-br from-purple-600 to-pink-600 hover:from-purple-700 hover:to-purple-700 text-white shadow-lg"
+              size="icon"
+              aria-label="Open chat"
+            >
+              <MessageSquare className="h-5 w-5" />
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-          {!minimized && (
-            <>
-              <Tabs
-                defaultValue="global"
-                className="w-full"
-                onValueChange={setActiveTab}
-              >
-                <TabsList className="w-full bg-purple-900/30 border-b border-purple-700/30 rounded-none">
-                  <TabsTrigger
-                    value="global"
-                    className="flex-1 data-[state=active]:bg-purple-800/40"
-                  >
-                    Global
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="trade"
-                    className="flex-1 data-[state=active]:bg-purple-800/40"
-                  >
-                    Trade
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="private"
-                    className="flex-1 data-[state=active]:bg-purple-800/40"
-                  >
-                    Private
-                  </TabsTrigger>
-                </TabsList>
-                <TabsContent
-                  value="global"
-                  className="m-0 p-0 flex-1 flex flex-col"
-                >
-                  <ScrollArea className="flex-1 p-3" ref={scrollRef}>
-                    <div className="space-y-3">
-                      {messages.map((msg, i) => (
-                        <div key={i} className="space-y-1">
-                          <div className="flex justify-between items-center">
-                            <p className="text-sm font-medium text-pink-400">
-                              {msg.user}
-                            </p>
-                            <span className="text-xs text-purple-400">
-                              {formatTime(msg.timestamp)}
-                            </span>
-                          </div>
-                          <p className="text-sm bg-purple-800/30 p-2 rounded-md text-purple-100 border border-purple-700/30">
-                            {msg.text}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </ScrollArea>
-                  <form
-                    onSubmit={sendMessage}
-                    className="p-3 border-t border-purple-700/30"
-                  >
-                    <div className="flex space-x-2">
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            type="button"
-                            size="icon"
-                            variant="ghost"
-                            className="h-9 w-9 text-purple-300 hover:text-purple-100 bg-purple-800/30 hover:bg-purple-800/50"
-                          >
-                            <Smile className="h-5 w-5" />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-2 bg-purple-900 border-purple-700/50">
-                          <div className="flex flex-wrap gap-1 max-w-[200px]">
-                            {EMOJIS.map((emoji) => (
-                              <button
-                                key={emoji}
-                                type="button"
-                                className="text-lg hover:bg-purple-800/50 p-1 rounded"
-                                onClick={() => addEmoji(emoji)}
-                              >
-                                {emoji}
-                              </button>
-                            ))}
-                          </div>
-                        </PopoverContent>
-                      </Popover>
-                      <Input
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        placeholder="Type a message..."
-                        className="flex-1 bg-purple-800/30 border-purple-700/30 text-purple-100 placeholder-purple-400/50"
-                      />
-                      <Button
-                        type="submit"
-                        size="icon"
-                        className="bg-pink-600 hover:bg-pink-700 text-white transition-all duration-200"
-                      >
-                        <Send className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </form>
-                </TabsContent>
-                <TabsContent
-                  value="trade"
-                  className="m-0 p-0 flex-1 flex flex-col"
-                >
-                  <div className="flex-1 flex items-center justify-center">
-                    <p className="text-purple-300 text-sm">
-                      Trade chat coming soon
-                    </p>
-                  </div>
-                </TabsContent>
-                <TabsContent
-                  value="private"
-                  className="m-0 p-0 flex-1 flex flex-col"
-                >
-                  <div className="flex-1 flex items-center justify-center">
-                    <p className="text-purple-300 text-sm">
-                      Private messages coming soon
-                    </p>
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </>
+      {/* Main chat panel - more compact now */}
+      <motion.div
+        initial={{ x: 0 }}
+        animate={{
+          x: isChatVisible ? 0 : `calc(100% + 20px)`,
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 30,
+          duration: 0.3,
+        }}
+        onAnimationComplete={handleAnimationComplete}
+        className="fixed top-0 right-0 h-full z-40"
+        style={{ width: getChatWidth() }}
+      >
+        <div className="h-full flex flex-col">
+          {/* Semi-transparent overlay for the rest of the screen when chat is open on mobile */}
+          {isMobile && isChatVisible && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30"
+              onClick={() => setIsChatVisible(false)}
+            />
           )}
-        </Card>
+
+          {/* Chat container */}
+          <div className="h-full flex flex-col relative z-40">
+            <Card className="border-l border-t border-b border-purple-700/30 border-r-0 bg-gradient-to-br from-purple-950/95 to-purple-900/95 backdrop-blur-md shadow-xl flex flex-col h-full rounded-r-none rounded-l-lg">
+              {/* Chat header */}
+              <div className="p-3 border-b border-purple-700/30 flex justify-between items-center">
+                <div className="flex flex-col">
+                  <h2 className="font-semibold text-purple-100 flex items-center text-sm">
+                    <MessageSquare className="h-4 w-4 mr-1.5" />
+                    MM2 Chat
+                  </h2>
+
+                  {/* User count with cool animation */}
+                  <motion.div
+                    className="flex items-center mt-0.5 text-xs text-purple-300"
+                    initial={{ opacity: 0.8 }}
+                    animate={{ opacity: [0.8, 1, 0.8] }}
+                    transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
+                  >
+                    <Users className="h-3 w-3 mr-1 text-pink-400" />
+                    <motion.div
+                      key={userCount}
+                      initial={{ scale: 1.2, opacity: 0.7 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                      className="flex items-center"
+                    >
+                      <span className="font-medium text-pink-400">{userCount}</span>
+                      <span className="ml-1">online</span>
+                    </motion.div>
+                  </motion.div>
+                </div>
+
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 w-7 text-purple-300 hover:text-purple-100 hover:bg-purple-800/30"
+                  onClick={() => setIsChatVisible(false)}
+                  aria-label="Close chat"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+
+              {/* Chat messages */}
+              <ScrollArea className="flex-1 p-3" ref={scrollRef}>
+                <div className="space-y-3">
+                  {messages.map((msg, i) => (
+                    <div key={i} className="space-y-0.5">
+                      <div className="flex justify-between items-center">
+                        <p className="text-xs font-medium text-pink-400">{msg.user}</p>
+                        <span className="text-xs text-purple-400">{formatTime(msg.timestamp)}</span>
+                      </div>
+                      <p className="text-xs bg-purple-800/40 p-2 rounded-md text-purple-100 border border-purple-700/30">
+                        {msg.text}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+
+              {/* Message input */}
+              <form onSubmit={sendMessage} className="p-3 border-t border-purple-700/30 mt-auto">
+                <div className="flex space-x-1.5">
+                  <Popover.Root>
+                    <Popover.Trigger asChild>
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="ghost"
+                        className="h-8 w-8 text-purple-300 hover:text-purple-100 bg-purple-800/30 hover:bg-purple-800/50"
+                        aria-label="Open emoji picker"
+                      >
+                        <Smile className="h-4 w-4" />
+                      </Button>
+                    </Popover.Trigger>
+                    <Popover.Content className="w-auto p-2 bg-purple-900 border-purple-700/50 rounded-md shadow-lg">
+                      <div className="flex flex-wrap gap-1 max-w-[180px]">
+                        {EMOJIS.map((emoji) => (
+                          <button
+                            key={emoji}
+                            type="button"
+                            className="text-lg hover:bg-purple-800/50 p-1 rounded"
+                            onClick={() => addEmoji(emoji)}
+                            aria-label={`Add ${emoji} emoji`}
+                          >
+                            {emoji}
+                          </button>
+                        ))}
+                      </div>
+                    </Popover.Content>
+                  </Popover.Root>
+
+                  <Input
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="Type a message..."
+                    className="flex-1 bg-purple-800/30 border-purple-700/30 text-purple-100 placeholder-purple-400/50 text-xs h-8"
+                    aria-label="Message input"
+                  />
+                  <Button
+                    type="submit"
+                    size="icon"
+                    className="h-8 w-8 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white transition-all duration-200"
+                    aria-label="Send message"
+                  >
+                    <Send className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              </form>
+            </Card>
+          </div>
+        </div>
       </motion.div>
-    </AnimatePresence>
-  );
+
+      {/* New fixed toggle button at bottom right - always visible when chat is open */}
+      {isChatVisible && !isFullyCollapsed && (
+        <div className="fixed bottom-20 right-6 z-50">
+          <Button
+            onClick={() => setIsChatVisible(false)}
+            className="rounded-full h-12 w-12 bg-gradient-to-br from-purple-600 to-pink-600 hover:from-purple-700 hover:to-purple-700 text-white shadow-lg flex items-center justify-center"
+            aria-label="Minimize chat"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </Button>
+        </div>
+      )}
+    </>
+  )
 }
+
