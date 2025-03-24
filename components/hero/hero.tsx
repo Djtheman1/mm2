@@ -66,8 +66,8 @@ export function Hero() {
               <Image
                 src="/gem.png"
                 alt="MM2 Amethyst Gem"
-                width={500}
-                height={500}
+                width={450}
+                height={450}
                 className="animate-float"
               />
             </div>
