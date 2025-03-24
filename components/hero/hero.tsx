@@ -43,14 +43,14 @@ export function Hero() {
 
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
               <Button className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white border-none shadow-lg shadow-pink-600/25 transition-all duration-200 group">
-                Play Now
+                Deposit
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
               <Button
                 variant="outline"
                 className="border-purple-500/30 text-purple-200 hover:bg-purple-800/30 hover:text-white"
               >
-                Learn More
+                Withdraw
               </Button>
             </div>
           </motion.div>
