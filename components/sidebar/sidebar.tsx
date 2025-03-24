@@ -16,6 +16,11 @@ import {
   Users,
   Zap,
   Settings,
+  CoinsIcon,
+  Coins,
+  HandCoins,
+  CogIcon,
+  ShipWheel,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,9 +34,9 @@ import { cn } from "@/lib/utils";
 const navigation = [
   { name: "Home", href: "/", icon: Home },
   { name: "Marketplace", href: "/marketplace", icon: ShoppingCart },
-  { name: "Trading", href: "/trading", icon: BarChart2 },
+  { name: "CoinFlip", href: "/trading", icon: HandCoins },
   { name: "Leaderboard", href: "/leaderboard", icon: Trophy },
-  { name: "Jackpot", href: "/jackpot", icon: Diamond },
+  { name: "Jackpot", href: "/jackpot", icon: ShipWheel },
   { name: "Community", href: "/community", icon: Users },
   { name: "Events", href: "/events", icon: Zap },
   { name: "FAQ", href: "/faq", icon: HelpCircle },
@@ -105,25 +110,6 @@ export function Sidebar() {
           </nav>
         </TooltipProvider>
       </div>
-
-      <div className="p-4 border-t border-purple-700/30">
-        {!collapsed && (
-          <div className="bg-purple-800/20 rounded-lg p-3 border border-purple-700/30">
-            <h3 className="text-sm font-medium text-purple-100 mb-2">
-              Premium Membership
-            </h3>
-            <p className="text-xs text-purple-300 mb-3">
-              Unlock exclusive features and benefits
-            </p>
-            <Button
-              size="sm"
-              className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white border-none"
-            >
-              Upgrade Now
-            </Button>
-          </div>
-        )}
       </div>
-    </div>
   );
 }
