@@ -28,7 +28,7 @@ const navigation = [
   { name: "CoinFlip", href: "/trading", icon: HandCoins },
   { name: "Leaderboard", href: "/leaderboard", icon: Trophy },
   { name: "Jackpot", href: "/jackpot", icon: ShipWheel },
-  { name: "FAQ", href: "/faq", icon: HelpCircle },
+  { name: "Privacy Policy", href: "/privacy", icon: HelpCircle },
   { name: "Terms of Service", href: "/terms", icon: FileText },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
