@@ -53,14 +53,6 @@ export function Hero() {
                 Learn More
               </Button>
             </div>
-
-            <div className="relative">
-              <Input
-                placeholder="Search for items, users, or collections..."
-                className="bg-purple-900/50 border-purple-700/30 text-purple-100 placeholder-purple-400/50 pl-10 py-6"
-              />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-purple-400" />
-            </div>
           </motion.div>
 
           { <motion.div
