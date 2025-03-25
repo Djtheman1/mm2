@@ -17,6 +17,12 @@ module.exports = {
       },
     },
     extend: {
+      width: {
+        "fuck-you": "5em",
+      },
+      height: {
+        "fuck-you": "5em",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
