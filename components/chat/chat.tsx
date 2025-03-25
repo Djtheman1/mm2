@@ -1,60 +1,25 @@
-"use client";
 
-import type React from "react";
-
-import * as Popover from "@radix-ui/react-popover";
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { io } from "socket.io-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card } from "@/components/ui/card";
-import {
-  Smile,
-  Send,
-  ChevronRight,
-  MessageSquare,
-  X,
-  Users,
-} from "lucide-react";
+import { Smile, Send, ChevronRight, MessageSquare, X, Users } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import * as Popover from "@radix-ui/react-popover";
 
-const EMOJIS = [
-  "😊",
-  "😂",
-  "❤️",
-  "👍",
-  "🔥",
-  "✨",
-  "🎮",
-  "🎯",
-  "🎲",
-  "🎁",
-  "💎",
-  "🔪",
-  "🔫",
-];
+// Initialize Socket.IO client
+const socket = io();
+
+// Emojis for quick selection
+const EMOJIS = ["😊", "😂", "❤️", "👍", "🔥", "✨", "🎮", "🎯", "🎲", "🎁", "💎", "🔪", "🔫"];
 
 export function Chat() {
-  const [messages, setMessages] = useState<
-    { user: string; text: string; timestamp: Date }[]
-  >([
-    {
-      user: "System",
-      text: "Welcome to MM2 Amethyst chat! Please be respectful to other users.",
-      timestamp: new Date(),
-    },
-    {
-      user: "JohnDoe",
-      text: "Hey everyone! Anyone trading a Chroma Darkbringer?",
-      timestamp: new Date(Date.now() - 120000),
-    },
-    {
-      user: "TradeMaster",
-      text: "I have one, what's your offer?",
-      timestamp: new Date(Date.now() - 60000),
-    },
-  ]);
+  const [messages, setMessages] = useState<{ user: string; text: string; timestamp: Date }[]>([]);
+"use client";
+
   const [input, setInput] = useState("");
   const [isChatVisible, setIsChatVisible] = useState(true);
   const [isFullyCollapsed, setIsFullyCollapsed] = useState(false);
@@ -62,15 +27,20 @@ export function Chat() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
-  // Simulate random user count changes
+  // Handle incoming messages and scroll to the bottom when new message arrives
   useEffect(() => {
-    const interval = setInterval(() => {
-      // Random fluctuation between -2 and +3
-      const change = Math.floor(Math.random() * 6) - 2;
-      setUserCount((prev) => Math.max(12, prev + change));
-    }, 8000); // Change every 8 seconds
+    socket.on("receiveMessage", (message: { user: string; text: string; timestamp: any }) => {
+      // Ensure the timestamp is a valid Date object
+      const newMessage = {
+        ...message,
+        timestamp: new Date(message.timestamp), // Convert timestamp to Date object
+      };
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    });
 
-    return () => clearInterval(interval);
+    return () => {
+      socket.off("receiveMessage");
+    };
   }, []);
 
   useEffect(() => {
@@ -79,7 +49,6 @@ export function Chat() {
     }
   }, [messages]);
 
-  // Handle the animation completion
   const handleAnimationComplete = () => {
     if (!isChatVisible) {
       setIsFullyCollapsed(true);
@@ -88,14 +57,13 @@ export function Chat() {
     }
   };
 
+  // Handle message submission
   const sendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {
-      setMessages([
-        ...messages,
-        { user: "User123", text: input, timestamp: new Date() },
-      ]);
-      setInput("");
+      const message = { user: "User123"/*<--CHANGE THIS WHEN LOCALSTORAGE SETUP */, text: input, timestamp: new Date() };
+      socket.emit("sendMessage", message); // Send message to server
+      setInput(""); // Clear input
     }
   };
 
@@ -107,17 +75,17 @@ export function Chat() {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
-  // Calculate chat width based on screen size - more compact now
+  // Calculate chat width based on screen size
   const getChatWidth = () => {
     if (isMobile) {
-      return "70vw"; // Reduced from 85vw
+      return "70vw"; // Adjust width for mobile
     }
-    return "300px"; // Reduced from 380px
+    return "300px"; // Adjust width for desktop
   };
 
   return (
     <>
-      {/* Toggle button that appears when chat is collapsed - now at bottom right */}
+      {/* Toggle button that appears when chat is collapsed */}
       <AnimatePresence>
         {isFullyCollapsed && (
           <motion.div
@@ -139,7 +107,7 @@ export function Chat() {
         )}
       </AnimatePresence>
 
-      {/* Main chat panel - more compact now */}
+      {/* Main chat panel */}
       <motion.div
         initial={{ x: 0 }}
         animate={{
@@ -156,7 +124,6 @@ export function Chat() {
         style={{ width: getChatWidth() }}
       >
         <div className="h-full flex flex-col">
-          {/* Semi-transparent overlay for the rest of the screen when chat is open on mobile */}
           {isMobile && isChatVisible && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -178,7 +145,7 @@ export function Chat() {
                     MM2 Chat
                   </h2>
 
-                  {/* User count with cool animation */}
+                  {/* User count */}
                   <motion.div
                     className="flex items-center mt-0.5 text-xs text-purple-300"
                     initial={{ opacity: 0.8 }}
@@ -293,7 +260,7 @@ export function Chat() {
         </div>
       </motion.div>
 
-      {/* New fixed toggle button at bottom right - always visible when chat is open */}
+      {/* Fixed toggle button at the bottom right */}
       {isChatVisible && !isFullyCollapsed && (
         <div className="fixed bottom-20 right-6 z-50">
           <Button

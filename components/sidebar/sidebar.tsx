@@ -1,8 +1,9 @@
-"use client";
+"use client"
+
+import { useState } from "react"
+import Link from "next/link"
+import { motion } from "framer-motion"
 import Image from "next/image";
-import { useState } from "react";
-import Link from "next/link";
-import { motion } from "framer-motion";
 import {
   Home,
   Trophy,
@@ -11,14 +12,12 @@ import {
   FileText,
   Settings,
   ShipWheel,
-} from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { cn } from "@/lib/utils"
 
 const navigation = [
   { name: "Home", href: "/", icon: Home },
@@ -28,10 +27,10 @@ const navigation = [
   { name: "Privacy Policy", href: "/privacy", icon: HelpCircle },
   { name: "Terms of Service", href: "/terms", icon: FileText },
   { name: "Settings", href: "/settings", icon: Settings },
-];
+]
 
 export function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(false)
 
   // get username from local storage
   const username = localStorage.getItem("username");
@@ -40,10 +39,20 @@ export function Sidebar() {
     <div
       className={cn(
         "bg-purple-950/80 backdrop-blur-md border-r border-purple-700/30 flex flex-col transition-all duration-300",
-        collapsed ? "w-16" : "w-64"
+        collapsed ? "w-16" : "w-64",
       )}
     >
       <div className="flex-1 py-6">
+        <div className="px-3 mb-6">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full justify-between text-purple-300 hover:text-purple-100 hover:bg-purple-800/40"
+            onClick={() => setCollapsed(!collapsed)}
+          >
+            {!collapsed && <span>Collapse Menu</span>}
+            {collapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
+          </Button>
         <div className="flex items-center justify-center">
           <div className="flex flex-col items-center">
             <div className="flex flex-col items-center justify-center w-fuck-you h-fuck-you bg-purple-800/40 rounded-full p-4">
@@ -77,10 +86,7 @@ export function Sidebar() {
                         <item.icon className="h-5 w-5 text-pink-400 group-hover:text-pink-300 transition-colors duration-200" />
                       </Link>
                     </TooltipTrigger>
-                    <TooltipContent
-                      side="right"
-                      className="bg-purple-900 border-purple-700/50 text-purple-100"
-                    >
+                    <TooltipContent side="right" className="bg-purple-900 border-purple-700/50 text-purple-100">
                       {item.name}
                     </TooltipContent>
                   </Tooltip>
@@ -99,5 +105,7 @@ export function Sidebar() {
         </TooltipProvider>
       </div>
     </div>
-  );
+    </div>
+  )
+
 }
