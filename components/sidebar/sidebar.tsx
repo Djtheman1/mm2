@@ -11,10 +11,7 @@ import {
   FileText,
   Settings,
   ShipWheel,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -36,6 +33,9 @@ const navigation = [
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
 
+  // get username from local storage
+  const username = localStorage.getItem("username");
+
   return (
     <div
       className={cn(
@@ -45,14 +45,17 @@ export function Sidebar() {
     >
       <div className="flex-1 py-6">
         <div className="flex items-center justify-center">
-          <div className="flex items-center justify-center w-fuck-you h-fuck-you bg-purple-800/40 rounded-full">
-            <Image
-              src="/mm2_godlies/Darksword.png"
-              alt="Profile Picture"
-              width={1200}
-              height={1200}
-              className="rounded-full"
-            />
+          <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center justify-center w-fuck-you h-fuck-you bg-purple-800/40 rounded-full p-4">
+              <Image
+                src={localStorage.getItem("picture") || "/gem.png"}
+                alt="Profile Picture"
+                width={120}
+                height={120}
+                className="rounded-full"
+              />
+            </div>
+            <h2 className="mt-2 text-white">{username}</h2>
           </div>
         </div>
         <TooltipProvider delayDuration={0}>
