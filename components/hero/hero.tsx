@@ -1,11 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { ArrowRight } from "lucide-react";
 
 export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -16,6 +15,16 @@ export function Hero() {
 
   const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+  // Wallet Popup State
+  const [isWalletOpen, setIsWalletOpen] = useState(false);
+
+  // Sample MM2 Items
+  const items = [
+    { name: "Godly Knife", rarity: "Godly", image: "/images/godly-knife.png" },
+    { name: "Legendary Gun", rarity: "Legendary", image: "/images/legendary-gun.png" },
+    { name: "Rare Knife", rarity: "Rare", image: "/images/rare-knife.png" },
+  ];
 
   return (
     <section ref={ref} className="py-20 md:py-32 relative overflow-hidden">
@@ -36,16 +45,20 @@ export function Hero() {
               Welcome to MM2 Amethyst
             </h1>
             <p className="text-xl mb-8 text-purple-200 max-w-2xl">
-              MM2 Amethyst is your premier platform for fliping Murder Mystery 2
+              MM2 Amethyst is your premier platform for flipping Murder Mystery 2
               items. Experience secure transactions, real-time market data, and
               a vibrant community of players.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <Button className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white border-none shadow-lg shadow-pink-600/25 transition-all duration-200 group">
-                Play Now
+              <Button
+                onClick={() => setIsWalletOpen(true)} // Open Wallet Popup
+                className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white border-none shadow-lg shadow-pink-600/25 transition-all duration-200 group"
+              >
+                Deposit/Withdraw
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
+
               <Button
                 variant="outline"
                 className="border-purple-500/30 text-purple-200 hover:bg-purple-800/30 hover:text-white"
@@ -62,18 +75,47 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <div className="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-purple-600/20 rounded-full blur-3xl"></div>
-            <div className="relative z-10 ">
+            <div className="relative z-10">
               <Image
                 src="/gem.png"
                 alt="MM2 Amethyst Gem"
-                width={500}
-                height={500}
+                width={450}
+                height={450}
                 className="animate-float"
               />
             </div>
           </motion.div>
         </div>
       </div>
+
+      {/* Wallet Popup */}
+      {isWalletOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-96 relative"
+          >
+            <h2 className="text-xl font-bold mb-3">Your MM2 Items</h2>
+            <button
+              className="absolute top-3 right-3 text-gray-400 hover:text-white"
+              onClick={() => setIsWalletOpen(false)} // Close Wallet
+            >
+              ✖
+            </button>
+            <div className="grid grid-cols-2 gap-3">
+              {items.map((item, index) => (
+                <div key={index} className="bg-gray-800 p-2 rounded-lg">
+                  <img src={item.image} alt={item.name} className="w-full h-20 object-cover rounded" />
+                  <p className="text-sm font-bold mt-1">{item.name}</p>
+                  <p className="text-xs text-gray-400">{item.rarity}</p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      )}
     </section>
   );
 }
