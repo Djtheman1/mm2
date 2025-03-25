@@ -20,62 +20,6 @@ export function Chat() {
   const [messages, setMessages] = useState<{ user: string; text: string; timestamp: Date }[]>([]);
 "use client";
 
-import type React from "react";
-
-import * as Popover from "@radix-ui/react-popover";
-import { useState, useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Card } from "@/components/ui/card";
-import {
-  Smile,
-  Send,
-  ChevronRight,
-  MessageSquare,
-  X,
-  Users,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useMediaQuery } from "@/hooks/use-media-query";
-
-const EMOJIS = [
-  "😊",
-  "😂",
-  "❤️",
-  "👍",
-  "🔥",
-  "✨",
-  "🎮",
-  "🎯",
-  "🎲",
-  "🎁",
-  "💎",
-  "🔪",
-  "🔫",
-];
-
-export function Chat() {
-  const [messages, setMessages] = useState<
-    { user: string; text: string; timestamp: Date }[]
-  >([
-    {
-      user: "System",
-      text: "Welcome to MM2 Amethyst chat! Please be respectful to other users.",
-      timestamp: new Date(),
-    },
-    {
-      user: "JohnDoe",
-      text: "Hey everyone! Anyone trading a Chroma Darkbringer?",
-      timestamp: new Date(Date.now() - 120000),
-    },
-    {
-      user: "TradeMaster",
-      text: "I have one, what's your offer?",
-      timestamp: new Date(Date.now() - 60000),
-    },
-  ]);
-
   const [input, setInput] = useState("");
   const [isChatVisible, setIsChatVisible] = useState(true);
   const [isFullyCollapsed, setIsFullyCollapsed] = useState(false);
