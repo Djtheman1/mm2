@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
+import Image from "next/image";
 import {
   Home,
   Trophy,
@@ -31,6 +32,9 @@ const navigation = [
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false)
 
+  // get username from local storage
+  const username = localStorage.getItem("username");
+
   return (
     <div
       className={cn(
@@ -49,9 +53,22 @@ export function Sidebar() {
             {!collapsed && <span>Collapse Menu</span>}
             {collapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
           </Button>
+        <div className="flex items-center justify-center">
+          <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center justify-center w-fuck-you h-fuck-you bg-purple-800/40 rounded-full p-4">
+              <Image
+                src={localStorage.getItem("picture") || "/gem.png"}
+                alt="Profile Picture"
+                width={120}
+                height={120}
+                className="rounded-full"
+              />
+            </div>
+            <h2 className="mt-2 text-white">{username}</h2>
+          </div>
         </div>
         <TooltipProvider delayDuration={0}>
-          <nav className="space-y-1 px-2">
+          <nav className="space-y-1 px-2 mt-5">
             {navigation.map((item, index) => (
               <motion.div
                 key={item.name}
@@ -88,6 +105,7 @@ export function Sidebar() {
         </TooltipProvider>
       </div>
     </div>
+    </div>
   )
-}
 
+}

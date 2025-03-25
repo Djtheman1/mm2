@@ -21,9 +21,13 @@ export function Hero() {
 
   // Sample MM2 Items
   const items = [
-    { name: "Godly Knife", rarity: "Godly", image: "/images/godly-knife.png" },
-    { name: "Legendary Gun", rarity: "Legendary", image: "/images/legendary-gun.png" },
-    { name: "Rare Knife", rarity: "Rare", image: "/images/rare-knife.png" },
+    { name: "Godly Knife", rarity: "Godly", image: "/mm2_godlies/AmeriUP.png" },
+    {
+      name: "Legendary Gun",
+      rarity: "Legendary",
+      image: "/mm2_godlies/AmeriUP.png",
+    },
+    { name: "Rare Knife", rarity: "Rare", image: "/mm2_godlies/AmeriUP.png" },
   ];
 
   return (
@@ -45,9 +49,9 @@ export function Hero() {
               Welcome to MM2 Amethyst
             </h1>
             <p className="text-xl mb-8 text-purple-200 max-w-2xl">
-              MM2 Amethyst is your premier platform for flipping Murder Mystery 2
-              items. Experience secure transactions, real-time market data, and
-              a vibrant community of players.
+              MM2 Amethyst is your premier platform for flipping Murder Mystery
+              2 items. Experience secure transactions, real-time market data,
+              and a vibrant community of players.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
@@ -107,7 +111,13 @@ export function Hero() {
             <div className="grid grid-cols-2 gap-3">
               {items.map((item, index) => (
                 <div key={index} className="bg-gray-800 p-2 rounded-lg">
-                  <img src={item.image} alt={item.name} className="w-full h-20 object-cover rounded" />
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    width={500}
+                    height={400}
+                    className="rounded"
+                  />
                   <p className="text-sm font-bold mt-1">{item.name}</p>
                   <p className="text-xs text-gray-400">{item.rarity}</p>
                 </div>

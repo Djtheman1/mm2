@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -13,12 +13,37 @@ import { useRouter } from "next/navigation";
 export default function SignUpPage() {
   const router = useRouter();
   const [bioText] = useState("I verify that this is my MM2 Amethyst account");
+
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const username = localStorage.getItem("username");
+    if (username) {
+      router.push("/home");
+    }
+  }, [router]);
 
   const copyBioText = () => {
     navigator.clipboard.writeText(bioText);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const fetchProfilePicture = async (userId: string) => {
+    try {
+      const response = await fetch("/api/users/getUserPicture", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+      });
+
+      const data = await response.json();
+      return data.url;
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const fetchBioText = async (username: string) => {
@@ -38,6 +63,12 @@ export default function SignUpPage() {
       const data = await response.json();
       if (!data.userId) {
         throw new Error("User not found");
+      }
+
+      const picture = await fetchProfilePicture(data.userId);
+
+      if (picture) {
+        localStorage.setItem("picture", picture);
       }
 
       const bioResponse = await fetch("/api/users/getUserBio", {
@@ -186,6 +217,8 @@ export default function SignUpPage() {
                 ) as HTMLInputElement;
                 if (usernameInput.value) {
                   console.log(await fetchBioText(usernameInput.value));
+
+                  localStorage.setItem("username", usernameInput.value);
                   router.push("/home");
                 }
               }}
