@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import { Button } from "@/components/ui/button";
@@ -18,31 +17,40 @@ const EMOJIS = ["😊", "😂", "❤️", "👍", "🔥", "✨", "🎮", "🎯",
 
 export function Chat() {
   const [messages, setMessages] = useState<{ user: string; text: string; timestamp: Date }[]>([]);
-"use client";
-
+  "use client";
 
   const username = localStorage.getItem("username");
 
   const [input, setInput] = useState("");
   const [isChatVisible, setIsChatVisible] = useState(true);
   const [isFullyCollapsed, setIsFullyCollapsed] = useState(false);
-  const [userCount, setUserCount] = useState(42); // Initial user count
+  const [userCount, setUserCount] = useState(0); // Initialize with 0
   const scrollRef = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
-  // Handle incoming messages and scroll to the bottom when new message arrives
+  // Listen for incoming messages
   useEffect(() => {
     socket.on("receiveMessage", (message: { user: string; text: string; timestamp: any }) => {
-      // Ensure the timestamp is a valid Date object
       const newMessage = {
         ...message,
-        timestamp: new Date(message.timestamp), // Convert timestamp to Date object
+        timestamp: new Date(message.timestamp),
       };
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
     return () => {
       socket.off("receiveMessage");
+    };
+  }, []);
+
+  // Listen for user count updates
+  useEffect(() => {
+    socket.on("userCount", (count: number) => {
+      setUserCount(count);
+    });
+
+    return () => {
+      socket.off("userCount");
     };
   }, []);
 
@@ -53,20 +61,15 @@ export function Chat() {
   }, [messages]);
 
   const handleAnimationComplete = () => {
-    if (!isChatVisible) {
-      setIsFullyCollapsed(true);
-    } else {
-      setIsFullyCollapsed(false);
-    }
+    setIsFullyCollapsed(!isChatVisible);
   };
 
-  // Handle message submission
   const sendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {
-      const message = { user: username/*<--CHANGE THIS WHEN LOCALSTORAGE SETUP */, text: input, timestamp: new Date() };
-      socket.emit("sendMessage", message); // Send message to server
-      setInput(""); // Clear input
+      const message = { user: username, text: input, timestamp: new Date() };
+      socket.emit("sendMessage", message);
+      setInput("");
     }
   };
 
@@ -78,17 +81,10 @@ export function Chat() {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
-  // Calculate chat width based on screen size
-  const getChatWidth = () => {
-    if (isMobile) {
-      return "70vw"; // Adjust width for mobile
-    }
-    return "300px"; // Adjust width for desktop
-  };
+  const getChatWidth = () => (isMobile ? "70vw" : "300px");
 
   return (
     <>
-      {/* Toggle button that appears when chat is collapsed */}
       <AnimatePresence>
         {isFullyCollapsed && (
           <motion.div
@@ -110,7 +106,6 @@ export function Chat() {
         )}
       </AnimatePresence>
 
-      {/* Main chat panel */}
       <motion.div
         initial={{ x: 0 }}
         animate={{
@@ -137,10 +132,8 @@ export function Chat() {
             />
           )}
 
-          {/* Chat container */}
           <div className="h-full flex flex-col relative z-40">
             <Card className="border-l border-t border-b border-purple-700/30 border-r-0 bg-gradient-to-br from-purple-950/95 to-purple-900/95 backdrop-blur-md shadow-xl flex flex-col h-full rounded-r-none rounded-l-lg">
-              {/* Chat header */}
               <div className="p-3 border-b border-purple-700/30 flex justify-between items-center">
                 <div className="flex flex-col">
                   <h2 className="font-semibold text-purple-100 flex items-center text-sm">
@@ -166,9 +159,7 @@ export function Chat() {
                       transition={{ duration: 0.3 }}
                       className="flex items-center"
                     >
-                      <span className="font-medium text-pink-400">
-                        {userCount}
-                      </span>
+                      <span className="font-medium text-pink-400">{userCount}</span>
                       <span className="ml-1">online</span>
                     </motion.div>
                   </motion.div>
@@ -185,18 +176,13 @@ export function Chat() {
                 </Button>
               </div>
 
-              {/* Chat messages */}
               <ScrollArea className="flex-1 p-3" ref={scrollRef}>
                 <div className="space-y-3">
                   {messages.map((msg, i) => (
                     <div key={i} className="space-y-0.5">
                       <div className="flex justify-between items-center">
-                        <p className="text-xs font-medium text-pink-400">
-                          {msg.user}
-                        </p>
-                        <span className="text-xs text-purple-400">
-                          {formatTime(msg.timestamp)}
-                        </span>
+                        <p className="text-xs font-medium text-pink-400">{msg.user}</p>
+                        <span className="text-xs text-purple-400">{formatTime(msg.timestamp)}</span>
                       </div>
                       <p className="text-xs bg-purple-800/40 p-2 rounded-md text-purple-100 border border-purple-700/30">
                         {msg.text}
@@ -206,41 +192,8 @@ export function Chat() {
                 </div>
               </ScrollArea>
 
-              {/* Message input */}
-              <form
-                onSubmit={sendMessage}
-                className="p-3 border-t border-purple-700/30 mt-auto"
-              >
+              <form onSubmit={sendMessage} className="p-3 border-t border-purple-700/30 mt-auto">
                 <div className="flex space-x-1.5">
-                  <Popover.Root>
-                    <Popover.Trigger asChild>
-                      <Button
-                        type="button"
-                        size="icon"
-                        variant="ghost"
-                        className="h-8 w-8 text-purple-300 hover:text-purple-100 bg-purple-800/30 hover:bg-purple-800/50"
-                        aria-label="Open emoji picker"
-                      >
-                        <Smile className="h-4 w-4" />
-                      </Button>
-                    </Popover.Trigger>
-                    <Popover.Content className="w-auto p-2 bg-purple-900 border-purple-700/50 rounded-md shadow-lg">
-                      <div className="flex flex-wrap gap-1 max-w-[180px]">
-                        {EMOJIS.map((emoji) => (
-                          <button
-                            key={emoji}
-                            type="button"
-                            className="text-lg hover:bg-purple-800/50 p-1 rounded"
-                            onClick={() => addEmoji(emoji)}
-                            aria-label={`Add ${emoji} emoji`}
-                          >
-                            {emoji}
-                          </button>
-                        ))}
-                      </div>
-                    </Popover.Content>
-                  </Popover.Root>
-
                   <Input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
@@ -248,12 +201,7 @@ export function Chat() {
                     className="flex-1 bg-purple-800/30 border-purple-700/30 text-purple-100 placeholder-purple-400/50 text-xs h-8"
                     aria-label="Message input"
                   />
-                  <Button
-                    type="submit"
-                    size="icon"
-                    className="h-8 w-8 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white transition-all duration-200"
-                    aria-label="Send message"
-                  >
+                  <Button type="submit" size="icon" className="h-8 w-8 bg-gradient-to-r from-pink-600 to-purple-600">
                     <Send className="h-3.5 w-3.5" />
                   </Button>
                 </div>
@@ -262,19 +210,6 @@ export function Chat() {
           </div>
         </div>
       </motion.div>
-
-      {/* Fixed toggle button at the bottom right */}
-      {isChatVisible && !isFullyCollapsed && (
-        <div className="fixed bottom-20 right-6 z-50">
-          <Button
-            onClick={() => setIsChatVisible(false)}
-            className="rounded-full h-12 w-12 bg-gradient-to-br from-purple-600 to-pink-600 hover:from-purple-700 hover:to-purple-700 text-white shadow-lg flex items-center justify-center"
-            aria-label="Minimize chat"
-          >
-            <ChevronRight className="h-5 w-5" />
-          </Button>
-        </div>
-      )}
     </>
   );
 }
