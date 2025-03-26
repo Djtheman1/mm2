@@ -18,17 +18,53 @@ export function Hero() {
 
   // Wallet Popup State
   const [isWalletOpen, setIsWalletOpen] = useState(false);
+  const [showNotification, setShowNotification] = useState(false); // Notification visibility
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   // Sample MM2 Items
   const items = [
-    { name: "Godly Knife", rarity: "Godly", image: "/mm2_godlies/AmeriUP.png" },
-    {
-      name: "Legendary Gun",
-      rarity: "Legendary",
-      image: "/mm2_godlies/AmeriUP.png",
-    },
-    { name: "Rare Knife", rarity: "Rare", image: "/mm2_godlies/AmeriUP.png" },
+    { name: "Bauble", rarity: "Bauble", image: "/mm2_godlies/Bauble.png" },
+    { name: "Evergreen", rarity: "Evergreen", image: "/mm2_godlies/Evergreen.png" },
+    { name: "Evergun", rarity: "Evergun", image: "/mm2_godlies/Evergun.png" },
   ];
+
+  // Handle item selection
+  const handleItemClick = (itemName: string) => {
+    setSelectedItems((prevSelectedItems) =>
+      prevSelectedItems.includes(itemName)
+        ? prevSelectedItems.filter((item) => item !== itemName)
+        : [...prevSelectedItems, itemName]
+    );
+  };
+
+  // Handle Select All
+  const handleSelectAll = () => {
+    if (selectedItems.length === items.length) {
+      setSelectedItems([]); // Deselect all
+    } else {
+      setSelectedItems(items.map(item => item.name)); // Select all
+    }
+  };
+
+  // Handle Withdraw
+  const handleWithdraw = () => {
+    if (selectedItems.length === 0) {
+      setShowNotification(true); // Show the notification if no item is selected
+      setTimeout(() => setShowNotification(false), 5000); // Hide after 5 seconds
+      return;
+    }
+    const robloxGameURL = `https://robloxlinkwithdraw.com?items=${selectedItems.join(",")}`;
+    window.open(robloxGameURL, "_blank");
+  };
+
+  // Handle Close Wallet Popup
+  const closeWalletPopup = () => {
+    setIsWalletOpen(false);
+  };
+
+  function handleRedirect(arg0: string): void {
+    throw new Error("Function not implemented.");
+  }
 
   return (
     <section ref={ref} className="py-20 md:py-32 relative overflow-hidden">
@@ -94,36 +130,105 @@ export function Hero() {
 
       {/* Wallet Popup */}
       {isWalletOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-96 relative"
+            className="relative bg-gradient-to-br from-purple-950 to-purple-800 text-white p-6 rounded-3xl shadow-2xl w-[42rem] max-w-full sm:w-[40rem] lg:w-[45rem] transition-all duration-500 hover:scale-105"
           >
-            <h2 className="text-xl font-bold mb-3">Your MM2 Items</h2>
+            <h2 className="text-3xl font-semibold mb-4 text-center tracking-wider">
+              Your Inventory
+            </h2>
+
+            {/* Decorative Line */}
+            <div className="relative flex items-center justify-center mb-4">
+              <div className="w-full h-[2px] bg-gradient-to-r from-purple-500 via-indigo-500 to-purple-500"></div>
+              <div className="absolute px-4 bg-purple-950 text-purple-200 text-sm font-semibold tracking-wider">
+                Trade with Bot (MM2_Amethyst)
+              </div>
+            </div>
+
             <button
-              className="absolute top-3 right-3 text-gray-400 hover:text-white"
-              onClick={() => setIsWalletOpen(false)} // Close Wallet
+              className="absolute top-4 right-4 text-gray-300 hover:text-white text-2xl"
+              onClick={closeWalletPopup}
             >
               ✖
             </button>
-            <div className="grid grid-cols-2 gap-3">
+
+            {/* Select All Button */}
+            <div className="flex justify-center mb-6">
+              <Button
+                onClick={handleSelectAll}
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white border-none shadow-lg hover:from-indigo-700 hover:to-purple-700 w-32"
+              >
+                {selectedItems.length === items.length ? "Deselect All" : "Select All"}
+              </Button>
+            </div>
+
+            {/* Grid for Inventory Items */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-6 pr-10">
               {items.map((item, index) => (
-                <div key={index} className="bg-gray-800 p-2 rounded-lg">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    width={500}
-                    height={400}
-                    className="rounded"
-                  />
-                  <p className="text-sm font-bold mt-1">{item.name}</p>
-                  <p className="text-xs text-gray-400">{item.rarity}</p>
-                </div>
+                <motion.div
+                  key={index}
+                  className={`bg-gradient-to-br from-indigo-900 to-purple-700 p-3 rounded-lg shadow-md transform transition-all duration-300 ${selectedItems.includes(item.name) ? "border-4 border-indigo-500" : ""}`}
+                  whileHover={{ scale: 1.05 }}
+                  onClick={() => handleItemClick(item.name)}
+                >
+                  <div className="w-full h-24 flex items-center justify-center overflow-hidden rounded-md">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <p className="text-sm font-semibold mt-2 text-center">
+                    {item.name}
+                  </p>
+                  <p className="text-xs text-gray-300 text-center">
+                    {item.rarity}
+                  </p>
+                </motion.div>
               ))}
             </div>
+
+            {/* Decorative Line */}
+            <div className="relative flex items-center justify-center my-6">
+              <div className="w-full h-[2px] bg-gradient-to-r from-purple-500 via-indigo-500 to-purple-500"></div>
+            </div>
+
+            {/* Buttons for Withdraw and Deposit */}
+            <div className="flex justify-center gap-6 mb-6">
+              <Button
+                onClick={handleWithdraw}
+                className="bg-gradient-to-r from-pink-500 to-purple-600 text-white border-none shadow-lg hover:from-pink-600 hover:to-purple-700 w-32"
+              >
+                Withdraw
+              </Button>
+              <div className="relative w-16">
+                <Image
+                  src="/gem-logo.png"
+                  alt="Gem Logo"
+                  layout="fill"
+                  objectFit="contain"
+                  className="absolute top-0 left-0 drop-shadow-md"
+                />
+              </div>
+              <Button
+                onClick={() => handleRedirect("deposit")}
+                className="bg-gradient-to-r from-pink-500 to-purple-600 text-white border-none shadow-lg hover:from-pink-600 hover:to-purple-700 w-32"
+              >
+                Deposit
+              </Button>
+            </div>
           </motion.div>
+        </div>
+      )}
+
+      {/* Notification Message for No Items Selected */}
+      {showNotification && (
+        <div className="fixed bottom-4 left-4 z-50 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg text-sm">
+          <p>You must select at least one item before you can withdraw.</p>
         </div>
       )}
     </section>
