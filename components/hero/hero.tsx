@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { WalletPopup } from "../inventory/inventory"; // Import your WalletPopup component
 
 export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -18,17 +19,53 @@ export function Hero() {
 
   // Wallet Popup State
   const [isWalletOpen, setIsWalletOpen] = useState(false);
+  const [showNotification, setShowNotification] = useState(false); // Notification visibility
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   // Sample MM2 Items
   const items = [
-    { name: "Godly Knife", rarity: "Godly", image: "/mm2_godlies/AmeriUP.png" },
-    {
-      name: "Legendary Gun",
-      rarity: "Legendary",
-      image: "/mm2_godlies/AmeriUP.png",
-    },
-    { name: "Rare Knife", rarity: "Rare", image: "/mm2_godlies/AmeriUP.png" },
+    { name: "Bauble", rarity: "Bauble", image: "/mm2_godlies/Bauble.png" },
+    { name: "Evergreen", rarity: "Evergreen", image: "/mm2_godlies/Evergreen.png" },
+    { name: "Evergun", rarity: "Evergun", image: "/mm2_godlies/Evergun.png" },
   ];
+
+  // Handle item selection
+  const handleItemClick = (itemName: string) => {
+    setSelectedItems((prevSelectedItems) =>
+      prevSelectedItems.includes(itemName)
+        ? prevSelectedItems.filter((item) => item !== itemName)
+        : [...prevSelectedItems, itemName]
+    );
+  };
+
+  // Handle Select All
+  const handleSelectAll = () => {
+    if (selectedItems.length === items.length) {
+      setSelectedItems([]); // Deselect all
+    } else {
+      setSelectedItems(items.map(item => item.name)); // Select all
+    }
+  };
+
+  // Handle Withdraw
+  const handleWithdraw = () => {
+    if (selectedItems.length === 0) {
+      setShowNotification(true); // Show the notification if no item is selected
+      setTimeout(() => setShowNotification(false), 5000); // Hide after 5 seconds
+      return;
+    }
+    const robloxGameURL = `https://robloxlinkwithdraw.com?items=${selectedItems.join(",")}`;
+    window.open(robloxGameURL, "_blank");
+  };
+
+  // Handle Close Wallet Popup
+  const closeWalletPopup = () => {
+    setIsWalletOpen(false);
+  };
+
+  function handleRedirect(arg0: string): void {
+    throw new Error("Function not implemented.");
+  }
 
   return (
     <section ref={ref} className="py-20 md:py-32 relative overflow-hidden">
@@ -92,39 +129,18 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Wallet Popup */}
+      {/* Wallet Popup Component */}
       {isWalletOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-96 relative"
-          >
-            <h2 className="text-xl font-bold mb-3">Your MM2 Items</h2>
-            <button
-              className="absolute top-3 right-3 text-gray-400 hover:text-white"
-              onClick={() => setIsWalletOpen(false)} // Close Wallet
-            >
-              ✖
-            </button>
-            <div className="grid grid-cols-2 gap-3">
-              {items.map((item, index) => (
-                <div key={index} className="bg-gray-800 p-2 rounded-lg">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    width={500}
-                    height={400}
-                    className="rounded"
-                  />
-                  <p className="text-sm font-bold mt-1">{item.name}</p>
-                  <p className="text-xs text-gray-400">{item.rarity}</p>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
+        <WalletPopup
+          items={items}
+          selectedItems={selectedItems}
+          handleItemClick={handleItemClick}
+          handleSelectAll={handleSelectAll}
+          handleWithdraw={handleWithdraw}
+          handleRedirect={handleRedirect}
+          closeWalletPopup={closeWalletPopup} handleDeposit={function (): void {
+            throw new Error("Function not implemented.");
+          } }        />
       )}
     </section>
   );
