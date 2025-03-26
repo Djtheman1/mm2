@@ -11,6 +11,7 @@ interface WalletPopupProps {
   handleItemClick: (itemName: string) => void;
   handleSelectAll: () => void;
   handleWithdraw: () => void;
+  handleDeposit: () => void;
   handleRedirect: (type: string) => void;
   closeWalletPopup: () => void;
 }
@@ -21,19 +22,27 @@ export function WalletPopup({
   handleItemClick,
   handleSelectAll,
   handleWithdraw,
+  handleDeposit,
   handleRedirect,
   closeWalletPopup,
 }: WalletPopupProps) {
-  const [showNotification, setShowNotification] = useState(false);
+  const [showWithdrawNotification, setShowWithdrawNotification] = useState(false);
 
-  // Show notification when no items are selected
+  // Show notification when no items are selected for withdrawal
   const handleWithdrawWithCheck = () => {
     if (selectedItems.length === 0) {
-      setShowNotification(true);
-      setTimeout(() => setShowNotification(false), 5000); // Hide after 5 seconds
+      setShowWithdrawNotification(true);
+      setTimeout(() => setShowWithdrawNotification(false), 5000); // Hide after 5 seconds
       return;
     }
     handleWithdraw();
+  };
+
+  // Handle deposit (redirect to Roblox game URL)
+  const handleDepositWithCheck = () => {
+    // Redirect to the Roblox game URL for deposits, no need to check if items are selected
+    const robloxGameUrl = "https://www.roblox.com/games/YOUR_GAME_ID"; // Replace with the actual game URL
+    window.location.href = robloxGameUrl;
   };
 
   return (
@@ -120,7 +129,7 @@ export function WalletPopup({
               />
             </div>
             <Button
-              onClick={() => handleRedirect("deposit")}
+              onClick={handleDepositWithCheck}  // Handle deposit and redirect
               className="bg-gradient-to-r from-pink-500 to-purple-600 text-white border-none shadow-lg hover:from-pink-600 hover:to-purple-700 w-32"
             >
               Deposit
@@ -129,8 +138,8 @@ export function WalletPopup({
         </motion.div>
       </div>
 
-      {/* Notification Message for No Items Selected */}
-      {showNotification && (
+      {/* Notification Message for No Items Selected (only for withdraw) */}
+      {showWithdrawNotification && (
         <div className="fixed bottom-4 left-4 z-50 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg text-sm">
           <p>You must select at least one item before you can withdraw.</p>
         </div>
@@ -138,4 +147,3 @@ export function WalletPopup({
     </>
   );
 }
-

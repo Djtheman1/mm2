@@ -138,8 +138,9 @@ export function Hero() {
           handleSelectAll={handleSelectAll}
           handleWithdraw={handleWithdraw}
           handleRedirect={handleRedirect}
-          closeWalletPopup={closeWalletPopup}
-        />
+          closeWalletPopup={closeWalletPopup} handleDeposit={function (): void {
+            throw new Error("Function not implemented.");
+          } }        />
       )}
     </section>
   );
