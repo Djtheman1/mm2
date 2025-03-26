@@ -20,6 +20,9 @@ export function Chat() {
   const [messages, setMessages] = useState<{ user: string; text: string; timestamp: Date }[]>([]);
 "use client";
 
+
+  const username = localStorage.getItem("username");
+
   const [input, setInput] = useState("");
   const [isChatVisible, setIsChatVisible] = useState(true);
   const [isFullyCollapsed, setIsFullyCollapsed] = useState(false);
@@ -61,7 +64,7 @@ export function Chat() {
   const sendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {
-      const message = { user: "User123"/*<--CHANGE THIS WHEN LOCALSTORAGE SETUP */, text: input, timestamp: new Date() };
+      const message = { user: username/*<--CHANGE THIS WHEN LOCALSTORAGE SETUP */, text: input, timestamp: new Date() };
       socket.emit("sendMessage", message); // Send message to server
       setInput(""); // Clear input
     }
@@ -142,7 +145,7 @@ export function Chat() {
                 <div className="flex flex-col">
                   <h2 className="font-semibold text-purple-100 flex items-center text-sm">
                     <MessageSquare className="h-4 w-4 mr-1.5" />
-                    MM2 Chat
+                    Chat
                   </h2>
 
                   {/* User count */}
