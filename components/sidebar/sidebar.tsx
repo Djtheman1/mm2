@@ -26,7 +26,6 @@ const navigation = [
   { name: "Jackpot", href: "/jackpot", icon: ShipWheel },
   { name: "Privacy Policy", href: "/privacy", icon: HelpCircle },
   { name: "Terms of Service", href: "/terms", icon: FileText },
-  { name: "Settings", href: "/settings", icon: Settings },
 ]
 
 export function Sidebar() {
