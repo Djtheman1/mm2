@@ -21,12 +21,11 @@ import { cn } from "@/lib/utils"
 
 const navigation = [
   { name: "Home", href: "/", icon: Home },
-  { name: "CoinFlip", href: "/trading", icon: HandCoins },
+  { name: "CoinFlip", href: "/coinflip", icon: HandCoins },
   { name: "Leaderboard", href: "/leaderboard", icon: Trophy },
   { name: "Jackpot", href: "/jackpot", icon: ShipWheel },
   { name: "Privacy Policy", href: "/privacy", icon: HelpCircle },
   { name: "Terms of Service", href: "/terms", icon: FileText },
-  { name: "Settings", href: "/settings", icon: Settings },
 ]
 
 export function Sidebar() {
@@ -67,6 +66,7 @@ export function Sidebar() {
             <h2 className="mt-2 text-white">{username}</h2>
           </div>
         </div>
+        
         <TooltipProvider delayDuration={0}>
           <nav className="space-y-1 px-2 mt-5">
             {navigation.map((item, index) => (
