@@ -1,4 +1,3 @@
-// server.js
 const express = require("express");
 const http = require("http");
 const next = require("next");
@@ -11,24 +10,36 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
   const server = express();
   const httpServer = http.createServer(server);
-  const io = socketIo(httpServer);
+  const io = socketIo(httpServer, {
+    cors: {
+      origin: "*", // Allow cross-origin requests
+      methods: ["GET", "POST"],
+    },
+  });
 
-  // Handle socket connections
+  let userCount = 0; // Track number of connected users
+
   io.on("connection", (socket) => {
-    console.log("A user connected");
+    userCount++;
+    console.log(`[SERVER] A user connected. Total users: ${userCount}`);
+
+    // Emit updated user count to all clients
+    io.emit("userCount", userCount);
 
     // Send a welcome message to the connected user
     socket.emit("message", { user: "System", text: "Welcome to the chat!" });
 
     // Listen for messages from the client
     socket.on("sendMessage", (message) => {
-      console.log("Received message: ", message);
-      // Broadcast the message to all connected clients
-      io.emit("receiveMessage", message);
+      console.log("[SERVER] Received message:", message);
+      io.emit("receiveMessage", message); // Broadcast message to all clients
     });
 
+    // Handle user disconnection
     socket.on("disconnect", () => {
-      console.log("A user disconnected");
+      userCount = Math.max(0, userCount - 1);
+      console.log(`[SERVER] A user disconnected. Total users: ${userCount}`);
+      io.emit("userCount", userCount); // Emit updated user count
     });
   });
 
