@@ -26,7 +26,7 @@ const navigation = [
   { name: "Jackpot", href: "/jackpot", icon: ShipWheel },
   { name: "Privacy Policy", href: "/privacy", icon: HelpCircle },
   { name: "Terms of Service", href: "/terms", icon: FileText },
-
+  ];
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
 

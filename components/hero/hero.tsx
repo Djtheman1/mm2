@@ -22,6 +22,9 @@ export function Hero() {
   const [showNotification, setShowNotification] = useState(false); // Notification visibility
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
+  // Learn More Modal State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   // Sample MM2 Items
   const items = [
     { name: "Bauble", rarity: "Bauble", image: "/mm2_godlies/Bauble.png" },
@@ -63,9 +66,14 @@ export function Hero() {
     setIsWalletOpen(false);
   };
 
-  function handleRedirect(arg0: string): void {
-    throw new Error("Function not implemented.");
-  }
+  // Handle "Learn More" Modal
+  const handleLearnMore = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <section ref={ref} className="py-20 md:py-32 relative overflow-hidden">
@@ -101,6 +109,7 @@ export function Hero() {
               </Button>
 
               <Button
+                onClick={handleLearnMore} // Open Learn More Modal
                 variant="outline"
                 className="border-purple-500/30 text-purple-200 hover:bg-purple-800/30 hover:text-white"
               >
@@ -137,10 +146,31 @@ export function Hero() {
           handleItemClick={handleItemClick}
           handleSelectAll={handleSelectAll}
           handleWithdraw={handleWithdraw}
-          handleRedirect={handleRedirect}
           closeWalletPopup={closeWalletPopup} handleDeposit={function (): void {
             throw new Error("Function not implemented.");
+          } } handleRedirect={function (type: string): void {
+            throw new Error("Function not implemented.");
           } }        />
+      )}
+
+      {/* Learn More Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black/50 z-20">
+          <div className="bg-purple-800 p-6 rounded-lg max-w-lg w-full">
+            <h2 className="text-2xl font-bold mb-4">How to Deposit and Withdraw</h2>
+            <p className="text-lg mb-4">
+              To deposit items, simply select the items from your inventory and
+              click the "Deposit" button. The items will be added to your MM2
+              Amethyst account. To withdraw items, select the items you want to
+              withdraw and click "Withdraw" to initiate the transfer.
+            </p>
+            <div className="flex justify-end">
+              <Button onClick={closeModal} className="bg-purple-600 text-white">
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
       )}
     </section>
   );
