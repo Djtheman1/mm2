@@ -1,5 +1,4 @@
 "use client"
-
 import { useState } from "react"
 import Image from "next/image"
 import { motion } from "framer-motion"
@@ -9,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Sidebar } from "../sidebar/sidebar"
+
 // History Popup Component
 const HistoryPopup = ({ closePopup }: { closePopup: () => void }) => {
   const [searchQuery, setSearchQuery] = useState("")
@@ -22,46 +21,46 @@ const HistoryPopup = ({ closePopup }: { closePopup: () => void }) => {
     {
       id: 1,
       type: "win",
-      opponent: "shadowblade",
+      opponent: "bot1",
       choice: "Heads",
       result: "Heads",
-      items: ["Sword", "Shield"],
-      value: "66.00K",
+      items: ["Bauble", "Turkey"],
+      value: "Unknown",
       date: "March 28, 2025 14:30",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "",
     },
     {
       id: 2,
       type: "loss",
-      opponent: "darkrider",
+      opponent: "bot1",
       choice: "Tails",
       result: "Heads",
-      items: ["Gem", "Knife"],
-      value: "23.88K",
+      items: ["Harvester", "Evergun"],
+      value: "Unknown",
       date: "March 27, 2025 18:45",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "",
     },
     {
       id: 3,
       type: "win",
-      opponent: "nightstalker",
+      opponent: "bot1",
       choice: "Heads",
       result: "Heads",
-      items: ["Sword", "Gem"],
-      value: "45.50K",
+      items: ["Bioblade", "Harvester"],
+      value: "Unknown",
       date: "March 26, 2025 09:15",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "",
     },
     {
       id: 4,
       type: "loss",
-      opponent: "firestorm",
+      opponent: "bot1",
       choice: "Tails",
       result: "Heads",
-      items: ["Shield", "Knife"],
-      value: "12.30K",
+      items: ["Harvester", "Lugar"],
+      value: "Unknown",
       date: "March 25, 2025 21:10",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "",
     },
   ]
 
@@ -229,16 +228,10 @@ const HistoryPopup = ({ closePopup }: { closePopup: () => void }) => {
                         <div className="font-medium">{item.value}</div>
                         <div className="flex items-center justify-end gap-2">
                           <div className="flex items-center">
-                            <Image
-                              src="/images/heads-coin.png"
-                              alt={item.choice}
-                              width={24}
-                              height={24}
-                              className="mr-1"
-                            />
+                            <Image src="/heads.webp" alt={item.choice} width={24} height={24} className="mr-1" />
                             <span className="text-xs text-purple-300">→</span>
                             <Image
-                              src="/images/tails-coin.png"
+                              src="/tails.webp"
                               alt={item.result}
                               width={24}
                               height={24}
@@ -323,7 +316,7 @@ const GameDetailsPopup = ({ game, closePopup }: { game: any; closePopup: () => v
               <div className="flex items-center justify-center gap-2">
                 {game.choice && (
                   <Image
-                    src="/images/heads-coin.png"
+                    src="/heads.webp"
                     alt={game.choice}
                     width={30}
                     height={30}
@@ -333,7 +326,7 @@ const GameDetailsPopup = ({ game, closePopup }: { game: any; closePopup: () => v
                 <span className="text-lg font-bold">{game.value}</span>
                 {game.player2 !== "waiting..." && game.player2Choice && (
                   <Image
-                    src="/images/tails-coin.png"
+                    src="/tails.webp"
                     alt={game.player2Choice}
                     width={30}
                     height={30}
@@ -463,7 +456,7 @@ const InventoryPopup = ({ items, selectedItems, handleItemClick, handleSelectAll
           <div className="flex justify-center mt-8">
             <div className="flex space-x-16">
               <motion.div
-                className={`cursor-pointer relative ${selectedCoin === "heads" ? "scale-110 drop-shadow-[0_0_10px_rgba(138,43,226,0.8)]" : ""}`}
+                className={`cursor-pointer relative ${selectedCoin === "heads" ? "scale-110 drop-shadow-[0_0_10px_rgba(108,443,226,0.8)]" : ""}`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleCoinSelect("heads")}
@@ -484,13 +477,13 @@ const InventoryPopup = ({ items, selectedItems, handleItemClick, handleSelectAll
                   }
                   transition={{ duration: 0.8 }}
                 >
-                  <Image src="/images/heads-coin.png" alt="Heads" width={150} height={150} className="drop-shadow-lg" />
+                  <Image src="/heads.webp" alt="Heads" width={150} height={150} className="drop-shadow-lg" />
                 </motion.div>
                 <p className="text-center mt-2 font-bold text-white/80">HEADS</p>
               </motion.div>
 
               <motion.div
-                className={`cursor-pointer relative ${selectedCoin === "tails" ? "scale-110 drop-shadow-[0_0_10px_rgba(138,43,226,0.8)]" : ""}`}
+                className={`cursor-pointer relative ${selectedCoin === "tails" ? "scale-110 drop-shadow-[0_0_10px_rgba(108,443,226,0.8)]" : ""}`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleCoinSelect("tails")}
@@ -511,7 +504,7 @@ const InventoryPopup = ({ items, selectedItems, handleItemClick, handleSelectAll
                   }
                   transition={{ duration: 0.8 }}
                 >
-                  <Image src="/images/tails-coin.png" alt="Tails" width={150} height={150} className="drop-shadow-lg" />
+                  <Image src="/tails.webp" alt="Tails" width={150} height={150} className="drop-shadow-lg" />
                 </motion.div>
                 <p className="text-center mt-2 font-bold text-white/80">TAILS</p>
               </motion.div>
@@ -545,10 +538,9 @@ const InventoryPopup = ({ items, selectedItems, handleItemClick, handleSelectAll
 // Coinflip Component
 const CoinFlip = () => {
   const [items] = useState([
-    { name: "Sword", rarity: "Rare", image: "/placeholder.svg?height=96&width=96" },
-    { name: "Shield", rarity: "Common", image: "/placeholder.svg?height=96&width=96" },
-    { name: "Gem", rarity: "Epic", image: "/placeholder.svg?height=96&width=96" },
-    { name: "Knife", rarity: "Uncommon", image: "/placeholder.svg?height=96&width=96" },
+    { name: "Bauble", rarity: "Bauble", image: "/mm2_godlies/Bauble.png" },
+    { name: "Evergreen", rarity: "Evergreen", image: "/mm2_godlies/Evergreen.png" },
+    { name: "Evergun", rarity: "Evergun", image: "/mm2_godlies/Evergun.png" },
   ])
   const [selectedItems, setSelectedItems] = useState<string[]>([])
   const [isPopupOpen, setIsPopupOpen] = useState(false)
@@ -559,24 +551,24 @@ const CoinFlip = () => {
   const [matches, setMatches] = useState([
     {
       id: 1,
-      player1: "devilsservant1",
-      avatar1: "/placeholder.svg?height=50&width=50",
+      player1: "bot1",
+      avatar1: "",
       player2: "waiting...",
       avatar2: "",
-      items: ["Knife", "Gun"],
-      value: "66.00K",
-      range: "62.70K - 69.30K",
+      items: ["Turkey", "Turkey"],
+      value: "Unknown",
+      range: "Unknown - Unknown",
       choice: "Heads",
     },
     {
       id: 2,
-      player1: "shadowblade",
-      avatar1: "/placeholder.svg?height=50&width=50",
-      player2: "darkrider",
-      avatar2: "/placeholder.svg?height=50&width=50",
-      items: ["Sword", "Shield"],
-      value: "23.88K",
-      range: "11.40K - 12.60K",
+      player1: "bot1",
+      avatar1: "",
+      player2: "bot2",
+      avatar2: "",
+      items: ["Harvester", "Harvester"],
+      value: "Unknown",
+      range: "Unknown - Unknown",
       choice: "Tails",
       player2Choice: "Heads",
     },
@@ -634,7 +626,6 @@ const CoinFlip = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-900 to-gray-900 text-white">
       {/* Header Banner */}
-      
       <div className="bg-gradient-to-r from-purple-900 via-indigo-800 to-purple-900 p-4 shadow-lg">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center">
@@ -642,17 +633,14 @@ const CoinFlip = () => {
               <HandCoins className="h-6 w-6 text-white" />
             </div>
             <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-300 to-purple-300">
-              Coin Flip 
-              
+              Coin Flip
             </h1>
-            
           </div>
           <div className="flex space-x-3">
             <Button
               className="bg-gradient-to-r from-pink-500 to-purple-600 text-white border-none shadow-lg hover:from-pink-600 hover:to-purple-700"
               onClick={openHistoryPopup}
             >
-                
               History
             </Button>
             <Button
@@ -709,7 +697,7 @@ const CoinFlip = () => {
                   <div className="flex items-center justify-center gap-2">
                     {match.choice && (
                       <Image
-                        src="/images/heads-coin.png"
+                        src="/heads.webp"
                         alt={match.choice}
                         width={24}
                         height={24}
@@ -719,7 +707,7 @@ const CoinFlip = () => {
                     <div className="font-medium">{match.value}</div>
                     {match.player2 !== "waiting..." && match.player2Choice && (
                       <Image
-                        src="/images/tails-coin.png"
+                        src="/tails.webp"
                         alt={match.player2Choice}
                         width={24}
                         height={24}
@@ -790,7 +778,6 @@ const CoinFlip = () => {
           handleFlip={handleFlip}
         />
       )}
-      
     </div>
   )
 }
