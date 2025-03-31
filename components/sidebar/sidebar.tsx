@@ -39,7 +39,8 @@ export function Sidebar() {
     <div
       className={cn(
         "bg-purple-950/80 backdrop-blur-md border-r border-purple-700/30 flex flex-col transition-all duration-300",
-        collapsed ? "w-16" : "w-64"
+        collapsed ? "w-16" : "w-64",
+        "z-50"
       )}
     >
       <div className="flex-1 py-6">
