@@ -422,14 +422,7 @@ const InventoryPopup = ({ items, selectedItems, handleItemClick, handleSelectAll
       Select Items & Coinflip
     </h2>
 
-    {/* Decorative Line */}
-    <div className="relative flex items-center justify-center mb-4">
-      <div className="w-full h-[2px] bg-gradient-to-r from-purple-500 via-indigo-500 to-purple-500"></div>
-      <div className="absolute px-4 bg-purple-950 text-purple-200 text-sm font-semibold tracking-wider">
-        Trade with Bot (MM2_Amethyst)
-      </div>
-    </div>
-
+  
     {/* Close Button */}
     <button
       className="absolute top-4 right-4 text-gray-300 hover:text-white text-2xl"
@@ -468,6 +461,12 @@ const InventoryPopup = ({ items, selectedItems, handleItemClick, handleSelectAll
           <p className="text-xs text-gray-300 text-center">{item.rarity}</p>
         </motion.div>
       ))}
+    </div>
+  {/* Decorative Line */}
+  <div className="relative flex items-center justify-center mb-4">
+      <div className="w-full h-[2px] bg-gradient-to-r from-purple-500 via-indigo-500 to-purple-500"></div>
+      <div className="absolute px-4 bg-purple-950 text-purple-200 text-sm font-semibold tracking-wider">
+      </div>
     </div>
 
           {/* Coinflip Picker */}
