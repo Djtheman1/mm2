@@ -21,12 +21,13 @@ import { cn } from "@/lib/utils";
 
 const navigation = [
   { name: "Home", href: "/", icon: Home },
-  { name: "CoinFlip", href: "/trading", icon: HandCoins },
+  { name: "CoinFlip", href: "/coinflip", icon: HandCoins },
   { name: "Leaderboard", href: "/leaderboard", icon: Trophy },
   { name: "Jackpot", href: "/jackpot", icon: ShipWheel },
   { name: "Privacy Policy", href: "/privacy", icon: HelpCircle },
   { name: "Terms of Service", href: "/terms", icon: FileText },
-];
+  ];
+
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
 
@@ -71,6 +72,7 @@ export function Sidebar() {
                 <h2 className="mt-2 text-white">{username}</h2>
               </div>
             </div>
+
           ) : (
             <></>
           )}
@@ -92,6 +94,7 @@ export function Sidebar() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.3, delay: 0.05 * index }}
                     >
+
                       <Link
                         href={item.href}
                         className="flex items-center px-3 py-3 text-sm font-medium rounded-md text-purple-200 hover:bg-purple-800/40 hover:text-white group transition-all duration-200"

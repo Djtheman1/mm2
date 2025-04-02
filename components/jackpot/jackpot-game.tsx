@@ -369,10 +369,7 @@ export default function JackpotGame() {
           {/* Header */}
           <header className="bg-[#2D0845] border-b border-[#4D1A74] p-4 z-20">
             <div className="flex justify-between items-center">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-[#FF5E7D] to-[#FF3694] bg-clip-text text-transparent flex items-center">
-                <Diamond className="h-6 w-6 mr-2 text-[#FF3694]" />
-                Jackpot
-              </h1>
+              
             </div>
           </header>
 
