@@ -15,7 +15,7 @@ import {
 
 const navigation = [
   { name: "Home", href: "/", icon: Home },
-  { name: "CoinFlip", href: "/trading", icon: HandCoins },
+  { name: "CoinFlip", href: "/coinflip", icon: HandCoins },
   { name: "Leaderboard", href: "/leaderboard", icon: Trophy },
   { name: "Jackpot", href: "/jackpot", icon: ShipWheel },
   { name: "Privacy Policy", href: "/privacy", icon: HelpCircle },
