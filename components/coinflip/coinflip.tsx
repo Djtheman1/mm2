@@ -3,13 +3,14 @@ import { useState } from "react"
 import Image from "next/image"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Search, Filter, Calendar, ArrowUpDown, HandCoins } from "lucide-react"
+import { Search, Filter, Calendar, ArrowUpDown, HandCoins, Eye, Trophy, Clock, Loader2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Sidebar } from "../sidebar/sidebar"
-// History Popup Component
+
+// History Popup Component remains unchanged
 const HistoryPopup = ({ closePopup }: { closePopup: () => void }) => {
   const [searchQuery, setSearchQuery] = useState("")
   const [filterOpen, setFilterOpen] = useState(false)
@@ -286,7 +287,7 @@ const HistoryPopup = ({ closePopup }: { closePopup: () => void }) => {
   )
 }
 
-// Simple Game Details Popup
+// Enhanced Game Details Popup
 const GameDetailsPopup = ({ game, closePopup }: { game: any; closePopup: () => void }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
@@ -297,93 +298,130 @@ const GameDetailsPopup = ({ game, closePopup }: { game: any; closePopup: () => v
         transition={{ duration: 0.3 }}
         className="relative bg-gradient-to-br from-purple-950 to-purple-800 text-white p-6 rounded-3xl shadow-2xl w-[90%] max-w-2xl"
       >
-        <h2 className="text-2xl font-bold mb-4 text-center">Game Details</h2>
+        <div className="absolute top-0 left-0 w-full h-full bg-[url('/placeholder.svg')] opacity-5 bg-cover bg-center pointer-events-none"></div>
+        
+        <div className="relative z-10">
+          <h2 className="text-2xl font-bold mb-4 text-center bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-purple-200">
+            Game Details
+          </h2>
 
-        <div className="bg-purple-900/30 p-4 rounded-lg mb-4">
-          <div className="flex justify-between items-center mb-3">
-            <div className="flex items-center gap-2">
-              <Image
-                src={game.avatar1 || "/placeholder.svg?height=40&width=40"}
-                alt={game.player1}
-                width={40}
-                height={40}
-                className="rounded-full border-2 border-purple-500"
-              />
-              <span className="font-semibold">{game.player1}</span>
-            </div>
+          <div className="bg-purple-900/30 p-4 rounded-lg mb-4 border border-purple-700/30 backdrop-blur-sm">
+            <div className="flex justify-between items-center mb-3">
+              <div className="flex items-center gap-2">
+                <Image
+                  src={game.avatar1 || "/placeholder.svg?height=40&width=40"}
+                  alt={game.player1}
+                  width={40}
+                  height={40}
+                  className="rounded-full border-2 border-purple-500"
+                />
+                <span className="font-semibold">{game.player1}</span>
+              </div>
 
-            <div className="text-center">
-              <div className="flex items-center justify-center gap-2">
-                {game.choice && (
-                  <Image
-                    src="/heads.webp"
-                    alt={game.choice}
-                    width={30}
-                    height={30}
-                    className="border border-purple-500 rounded-full"
-                  />
-                )}
-                <span className="text-lg font-bold">{game.value}</span>
-                {game.player2 !== "waiting..." && game.player2Choice && (
-                  <Image
-                    src="/tails.webp"
-                    alt={game.player2Choice}
-                    width={30}
-                    height={30}
-                    className="border border-purple-500 rounded-full"
-                  />
+              <div className="text-center">
+                <div className="flex items-center justify-center gap-2">
+                  {game.choice && (
+                    <Image
+                      src="/heads.webp"
+                      alt={game.choice}
+                      width={30}
+                      height={30}
+                      className="border border-purple-500 rounded-full shadow-lg"
+                    />
+                  )}
+                  <span className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-purple-200">{game.value}</span>
+                  {game.player2 !== "waiting..." && game.player2Choice && (
+                    <Image
+                      src="/tails.webp"
+                      alt={game.player2Choice}
+                      width={30}
+                      height={30}
+                      className="border border-purple-500 rounded-full shadow-lg"
+                    />
+                  )}
+                </div>
+                <div className="text-xs text-purple-300 mt-1">{game.range}</div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {game.player2 !== "waiting..." ? (
+                  <div className="flex items-center gap-2">
+                    <Image
+                      src={game.avatar2 || "/placeholder.svg?height=40&width=40"}
+                      alt={game.player2}
+                      width={40}
+                      height={40}
+                      className="rounded-full border-2 border-purple-500"
+                    />
+                    <span className="font-semibold">{game.player2}</span>
+                  </div>
+                ) : (
+                  <span className="text-purple-300 italic flex items-center">
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Waiting for player...
+                  </span>
                 )}
               </div>
-              <div className="text-xs text-purple-300">{game.range}</div>
             </div>
 
-            <div className="flex items-center gap-2">
-              {game.player2 !== "waiting..." ? (
-                <div className="flex items-center gap-2">
-                  <Image
-                    src={game.avatar2 || "/placeholder.svg?height=40&width=40"}
-                    alt={game.player2}
-                    width={40}
-                    height={40}
-                    className="rounded-full border-2 border-purple-500"
-                  />
-                  <span className="font-semibold">{game.player2}</span>
-                </div>
+            {/* Game Status Banner */}
+            <div className="w-full bg-purple-800/50 p-2 rounded-md mb-4 text-center font-medium">
+              {game.player2 === "waiting..." ? (
+                <span className="text-yellow-300 flex items-center justify-center">
+                  <Clock className="w-4 h-4 mr-2" />
+                  Game Open - Waiting for Opponent
+                </span>
               ) : (
-                <span className="text-purple-300 italic">Waiting for player...</span>
+                <span className="text-blue-300 flex items-center justify-center">
+                  <HandCoins className="w-4 h-4 mr-2" />
+                  Game in Progress
+                </span>
               )}
             </div>
-          </div>
 
-          {/* Items */}
-          <div className="flex flex-wrap gap-3 justify-center mb-3">
-            {game.items.map((item: string, idx: number) => (
-              <div key={idx} className="relative group">
-                <img
-                  src={`/placeholder.svg?height=40&width=40`}
-                  alt={item}
-                  className="w-12 h-12 rounded-md border border-purple-500"
-                />
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-purple-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  {item}
-                </div>
+            {/* Items */}
+            <div className="mb-4">
+              <h3 className="text-md font-semibold mb-2 text-purple-200">Items at Stake:</h3>
+              <div className="flex flex-wrap gap-3 justify-center p-3 bg-purple-900/30 rounded-lg border border-purple-700/20">
+                {game.items.map((item: string, idx: number) => (
+                  <div key={idx} className="relative group">
+                    <div className="w-16 h-16 rounded-md border border-purple-500 p-1 bg-purple-800/30 flex items-center justify-center hover:scale-105 transition-all duration-300 overflow-hidden">
+                      <img
+                        src={`/placeholder.svg?height=40&width=40`}
+                        alt={item}
+                        className="w-14 h-14 rounded-md"
+                      />
+                    </div>
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-purple-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
+                      {item}
+                    </div>
+                    <div className="text-xs mt-1 text-center text-purple-300">{item}</div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            {game.player2 === "waiting..." ? (
+              <div className="text-center">
+                <Button className="bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg hover:shadow-purple-500/50 transform hover:-translate-y-1 transition-all duration-300">
+                  Join Game
+                </Button>
+              </div>
+            ) : (
+              <div className="text-center p-2 bg-purple-900/30 rounded-lg text-purple-300">
+                Game is in progress with two players
+              </div>
+            )}
           </div>
 
-          {game.player2 === "waiting..." ? (
-            <div className="text-center">
-              <Button className="bg-gradient-to-r from-pink-500 to-purple-600 text-white">Join Game</Button>
-            </div>
-          ) : (
-            <div className="text-center text-purple-300">Game already has two players</div>
-          )}
-        </div>
-
-        <div className="flex justify-center">
-          <Button className="bg-purple-800 hover:bg-purple-700 text-white" onClick={closePopup}>
-            Close
-          </Button>
+          <div className="flex justify-center">
+            <Button 
+              className="bg-purple-800 hover:bg-purple-700 text-white px-6" 
+              onClick={closePopup}
+            >
+              Close
+            </Button>
+          </div>
         </div>
 
         <button
@@ -397,7 +435,7 @@ const GameDetailsPopup = ({ game, closePopup }: { game: any; closePopup: () => v
   )
 }
 
-// Inventory Popup Component
+// Inventory Popup Component remains unchanged
 const InventoryPopup = ({ items, selectedItems, handleItemClick, handleSelectAll, closePopup, handleFlip }: any) => {
   const [selectedCoin, setSelectedCoin] = useState<string | null>(null)
   const [coinAnimation, setCoinAnimation] = useState(false)
@@ -410,67 +448,67 @@ const InventoryPopup = ({ items, selectedItems, handleItemClick, handleSelectAll
 
   return (
     <>
-{/* Inventory Popup */}
-<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
-  <motion.div
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
-    exit={{ opacity: 0, scale: 0.9 }}
-    className="relative bg-gradient-to-br from-purple-950 to-purple-800 text-white p-6 rounded-3xl shadow-2xl w-[42rem] max-w-full sm:w-[40rem] lg:w-[45rem] transition-all duration-500 hover:scale-105"
-  >
-    <h2 className="text-3xl font-semibold mb-4 text-center tracking-wider">
-      Select Items & Coinflip
-    </h2>
-
-  
-    {/* Close Button */}
-    <button
-      className="absolute top-4 right-4 text-gray-300 hover:text-white text-2xl"
-      onClick={InventoryPopup}
-    >
-      ✖
-    </button>
-
-    {/* Select All Button */}
-    <div className="flex justify-center mb-6">
-      <Button
-        onClick={handleSelectAll}
-        className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white border-none shadow-lg hover:from-indigo-700 hover:to-purple-700 w-32"
-      >
-        {selectedItems.length === items.length ? "Deselect All" : "Select All"}
-      </Button>
-    </div>
-
-    {/* Grid for Inventory Items */}
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-6 pr-10">
-      {items.map((item: any, index: number) => (
+      {/* Inventory Popup */}
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
         <motion.div
-          key={index}
-          className={`bg-gradient-to-br from-indigo-900 to-purple-700 p-3 rounded-lg shadow-md transform transition-all duration-300 ${selectedItems.includes(item.name) ? "border-4 border-indigo-500" : ""}`}
-          whileHover={{ scale: 1.05 }}
-          onClick={() => handleItemClick(item.name)}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          className="relative bg-gradient-to-br from-purple-950 to-purple-800 text-white p-6 rounded-3xl shadow-2xl w-full max-w-4xl transition-all duration-500"
         >
-          <div className="w-full h-24 flex items-center justify-center overflow-hidden rounded-md">
-            <img
-              src={item.image || "/placeholder.svg?height=96&width=96"}
-              alt={item.name}
-              className="w-full h-full object-cover"
-            />
+          <h2 className="text-3xl font-semibold mb-4 text-center tracking-wider">
+            Select Items & Coinflip
+          </h2>
+
+          {/* Close Button */}
+          <button
+            className="absolute top-4 right-4 text-gray-300 hover:text-white text-2xl"
+            onClick={closePopup}
+          >
+            ✖
+          </button>
+
+          {/* Select All Button */}
+          <div className="flex justify-center mb-6">
+            <Button
+              onClick={handleSelectAll}
+              className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white border-none shadow-lg hover:from-indigo-700 hover:to-purple-700 w-32"
+            >
+              {selectedItems.length === items.length ? "Deselect All" : "Select All"}
+            </Button>
           </div>
-          <p className="text-sm font-semibold mt-2 text-center">{item.name}</p>
-          <p className="text-xs text-gray-300 text-center">{item.rarity}</p>
-        </motion.div>
-      ))}
-    </div>
-  {/* Decorative Line */}
-  <div className="relative flex items-center justify-center mb-4">
-      <div className="w-full h-[2px] bg-gradient-to-r from-purple-500 via-indigo-500 to-purple-500"></div>
-      <div className="absolute px-4 bg-purple-950 text-purple-200 text-sm font-semibold tracking-wider">
-      </div>
-    </div>
+
+          {/* Grid for Inventory Items - MODIFIED TO MAKE ITEMS SMALLER */}
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2 mt-4">
+            {items.map((item: any, index: number) => (
+              <motion.div
+                key={index}
+                className={`bg-gradient-to-br from-indigo-900 to-purple-700 p-2 rounded-lg shadow-md transform transition-all duration-300 ${selectedItems.includes(item.name) ? "border-2 border-indigo-500" : ""}`}
+                whileHover={{ scale: 1.05 }}
+                onClick={() => handleItemClick(item.name)}
+              >
+                <div className="w-full h-16 flex items-center justify-center overflow-hidden rounded-md">
+                  <img
+                    src={item.image || "/placeholder.svg?height=64&width=64"}
+                    alt={item.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <p className="text-xs font-semibold mt-1 text-center truncate">{item.name}</p>
+                <p className="text-xs text-gray-300 text-center">{item.rarity}</p>
+              </motion.div>
+            ))}
+          </div>
+          {/* Decorative Line */}
+          <div className="relative flex items-center justify-center my-6">
+            <div className="w-full h-[2px] bg-gradient-to-r from-purple-500 via-indigo-500 to-purple-500"></div>
+            <div className="absolute px-4 bg-purple-950 text-purple-200 text-sm font-semibold tracking-wider">
+              Choose Your Side
+            </div>
+          </div>
 
           {/* Coinflip Picker */}
-          <div className="flex justify-center mt-8">
+          <div className="flex justify-center">
             <div className="flex space-x-16">
               <motion.div
                 className={`cursor-pointer relative ${selectedCoin === "heads" ? "scale-110 drop-shadow-[0_0_10px_rgba(108,443,226,0.8)]" : ""}`}
@@ -494,7 +532,7 @@ const InventoryPopup = ({ items, selectedItems, handleItemClick, handleSelectAll
                   }
                   transition={{ duration: 0.8 }}
                 >
-                  <Image src="/heads.webp" alt="Heads" width={150} height={150} className="drop-shadow-lg" />
+                  <Image src="/heads.webp" alt="Heads" width={120} height={120} className="drop-shadow-lg" />
                 </motion.div>
                 <p className="text-center mt-2 font-bold text-white/80">HEADS</p>
               </motion.div>
@@ -521,7 +559,7 @@ const InventoryPopup = ({ items, selectedItems, handleItemClick, handleSelectAll
                   }
                   transition={{ duration: 0.8 }}
                 >
-                  <Image src="/tails.webp" alt="Tails" width={150} height={150} className="drop-shadow-lg" />
+                  <Image src="/tails.webp" alt="Tails" width={120} height={120} className="drop-shadow-lg" />
                 </motion.div>
                 <p className="text-center mt-2 font-bold text-white/80">TAILS</p>
               </motion.div>
@@ -531,40 +569,37 @@ const InventoryPopup = ({ items, selectedItems, handleItemClick, handleSelectAll
           {/* Post Game Button */}
           <div className="flex justify-center mt-8">
             <Button
-              className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-2 text-lg shadow-xl"
+              className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-2 text-lg shadow-xl hover:shadow-purple-500/50 transform hover:-translate-y-1 transition-all duration-300"
               onClick={() => selectedCoin && handleFlip(selectedCoin)}
-              disabled={!selectedCoin}
+              disabled={!selectedCoin || selectedItems.length === 0}
             >
-              Post Game
+              {selectedItems.length === 0 ? "Select Items to Continue" : "Post Game"}
             </Button>
           </div>
-
-          {/* Close Button */}
-          <button
-            className="absolute top-4 right-4 text-gray-300 hover:text-white text-2xl opacity-80 hover:opacity-100 transition-all"
-            onClick={closePopup}
-          >
-            ✖
-          </button>
         </motion.div>
       </div>
     </>
   )
 }
 
-// Coinflip Component
+// Enhanced CoinFlip Component with fixed sidebar layout
 const CoinFlip = () => {
   const [items] = useState([
-    { name: "Bauble", rarity: "Bauble", image: "/mm2_godlies/Bauble.png" },
-    { name: "Evergreen", rarity: "Evergreen", image: "/mm2_godlies/Evergreen.png" },
-    { name: "Evergun", rarity: "Evergun", image: "/mm2_godlies/Evergun.png" },
+    { name: "Bauble", rarity: "", image: "/mm2_godlies/Bauble.png" },
+    { name: "Evergreen", rarity: "", image: "/mm2_godlies/Evergreen.png" },
+    { name: "Evergun", rarity: "", image: "/mm2_godlies/Evergun.png" },
+    { name: "Turkey", rarity: "", image: "/mm2_godlies/Turkey.png" },
+    { name: "VampGun", rarity: "", image: "/mm2_godlies/vampsgun.png" },
+    { name: "TravGun", rarity: "", image: "/mm2_godlies/TravGun.png" },
   ])
   const [selectedItems, setSelectedItems] = useState<string[]>([])
   const [isPopupOpen, setIsPopupOpen] = useState(false)
   const [isHistoryPopupOpen, setIsHistoryPopupOpen] = useState(false)
   const [isGameDetailsPopupOpen, setIsGameDetailsPopupOpen] = useState(false)
   const [selectedGame, setSelectedGame] = useState<any>(null)
+  const [activeTab, setActiveTab] = useState("active")
 
+  // Enhanced matches data
   const [matches, setMatches] = useState([
     {
       id: 1,
@@ -576,6 +611,8 @@ const CoinFlip = () => {
       value: "Unknown",
       range: "Unknown - Unknown",
       choice: "Heads",
+      status: "open",
+      timestamp: "5 min ago",
     },
     {
       id: 2,
@@ -588,358 +625,363 @@ const CoinFlip = () => {
       range: "Unknown - Unknown",
       choice: "Tails",
       player2Choice: "Heads",
+      status: "in_progress",
+      timestamp: "2 min ago",
+    },
+  ])
+
+  // Recent completed games data
+  const [recentGames, setRecentGames] = useState([
+    {
+      id: 101,
+      player1: "bot1",
+      avatar1: "",
+      player2: "bot2",
+      avatar2: "",
+      items: ["Bioblade", "Harvester"],
+      value: "Unknown",
+      winnerChoice: "Heads",
+      loserChoice: "Tails",
+      winner: "player1",
+      timestamp: "10 min ago",
+    },
+    {
+      id: 102,
+      player1: "bot2",
+      avatar1: "",
+      player2: "bot3",
+      avatar2: "",
+      items: ["Ghostblade"],
+      value: "Unknown",
+      winnerChoice: "Heads",
+      loserChoice: "Tails",
+      winner: "player2",
+      timestamp: "25 min ago",
+    },
+    {
+      id: 103,
+      player1: "bot1",
+      avatar1: "",
+      player2: "bot4",
+      avatar2: "",
+      items: ["Lugar", "Harvester"],
+      value: "Unknown",
+      winnerChoice: "Tails",
+      loserChoice: "Heads",
+      winner: "player1",
+      timestamp: "42 min ago",
     },
   ])
 
   const handleItemClick = (itemName: string) => {
-    setSelectedItems((prevSelected) =>
-      prevSelected.includes(itemName) ? prevSelected.filter((item) => item !== itemName) : [...prevSelected, itemName],
-    )
-  }
-
-  const handleSelectAll = () => {
-    setSelectedItems(selectedItems.length === items.length ? [] : items.map((item) => item.name))
-  }
-
-  const handleFlip = (action: string) => {
-    if (action === "post") {
-      // Logic to post the coinflip (e.g., save to database, update state, etc.)
-      console.log("Game Posted", selectedItems)
+    if (selectedItems.includes(itemName)) {
+      setSelectedItems(selectedItems.filter((item) => item !== itemName))
     } else {
-      console.log(`Coinflip: ${action}`)
+      setSelectedItems([...selectedItems, itemName])
     }
   }
 
-  const openHistoryPopup = () => {
-    setIsHistoryPopupOpen(true)
+  const handleSelectAll = () => {
+    if (selectedItems.length === items.length) {
+      setSelectedItems([])
+    } else {
+      setSelectedItems(items.map((item) => item.name))
+    }
   }
 
-  const closeHistoryPopup = () => {
-    setIsHistoryPopupOpen(false)
+  const handleFlip = (selectedCoin: string) => {
+    // Add game to matches with status open
+    const newGame = {
+      id: Date.now(),
+      player1: "bot1", // Would be current user in real app
+      avatar1: "",
+      player2: "waiting...",
+      avatar2: "",
+      items: selectedItems,
+      value: "Unknown",
+      range: "Unknown - Unknown",
+      choice: selectedCoin === "heads" ? "Heads" : "Tails",
+      status: "open",
+      timestamp: "Just now",
+    }
+
+    setMatches([newGame, ...matches])
+    setSelectedItems([])
+    setIsPopupOpen(false)
   }
 
-  const openGameDetailsPopup = (game: any) => {
+  const openGameDetails = (game: any) => {
     setSelectedGame(game)
     setIsGameDetailsPopupOpen(true)
   }
 
-  const closeGameDetailsPopup = () => {
-    setIsGameDetailsPopupOpen(false)
-  }
-
-  const openCreateGamePopup = () => {
-    setIsPopupOpen(true)
-  }
-
-  const closePopup = () => {
-    setIsPopupOpen(false)
-  }
-
-  const handleJoinGame = (gameId: number) => {
-    console.log(`Join game ${gameId}`)
-    // Add logic for joining the game
-  }
-
   return (
-    <div className="flex">
+    <div className="flex h-screen bg-gray-950 text-white overflow-hidden">
       {/* Sidebar */}
       <Sidebar />
-      
+
       {/* Main Content */}
-      <div className="flex-1 min-h-screen bg-gradient-to-b from-purple-900 to-gray-900 text-white">
-        {/* Header Banner */}
-        <div className="bg-gradient-to-r from-purple-900 via-indigo-800 to-purple-900 p-4 shadow-lg">
-          <div className="container mx-auto flex justify-between items-center">
-            <div className="flex items-center">
-            
-            </div>
-            <div className="flex space-x-3">
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header */}
+        <header className="bg-purple-900/30 backdrop-blur-sm p-4 border-b border-purple-800/50">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-purple-200">
+              Coinflip
+            </h1>
+            <div className="flex gap-2">
               <Button
-                className="bg-gradient-to-r from-pink-500 to-purple-600 text-white border-none shadow-lg hover:from-pink-600 hover:to-purple-700"
-                onClick={openHistoryPopup}
+                onClick={() => setIsHistoryPopupOpen(true)}
+                variant="outline"
+                className="border-purple-700 bg-purple-900/50 text-white hover:bg-purple-800"
               >
+                <Clock className="h-4 w-4 mr-2" />
                 History
               </Button>
               <Button
-                className="bg-gradient-to-r from-pink-500 to-purple-600 text-white border-none shadow-lg hover:from-pink-600 hover:to-purple-700"
-                onClick={openCreateGamePopup}
+                onClick={() => setIsPopupOpen(true)}
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-purple-500/20"
               >
+                <HandCoins className="h-4 w-4 mr-2" />
                 Create Game
               </Button>
             </div>
           </div>
-        </div>
+        </header>
 
-        {/* Main Content */}
-        <div className="container mx-auto p-6">
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold mb-4">Active Games</h2>
+        {/* Main content with tabs and games */}
+        <main className="flex-1 overflow-y-auto bg-gradient-to-b from-gray-950 to-purple-950/50 p-4">
+          {/* Tabs for Active/Recent Games */}
+          <Tabs defaultValue="active" className="mb-6" onValueChange={(value) => setActiveTab(value)}>
+            <TabsList className="grid grid-cols-2 w-full max-w-md mx-auto bg-purple-900/50 text-white">
+              <TabsTrigger value="active" className="data-[state=active]:bg-purple-700 text-white">
+                Active Games
+              </TabsTrigger>
+              <TabsTrigger value="recent" className="data-[state=active]:bg-purple-700 text-white">
+                Recent Games
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          {/* Active Games */}
+          {activeTab === "active" && (
             <div className="space-y-4">
-              {matches.map((match) => (
-                <motion.div
-                  key={match.id}
-                  whileHover={{ scale: 1.01 }}
-                  className="bg-gradient-to-r from-purple-900/70 to-indigo-900/70 p-4 rounded-lg flex flex-wrap md:flex-nowrap items-center justify-between shadow-md border border-purple-800/30"
-                  onClick={() => openGameDetailsPopup(match)}
-                >
-                  {/* Player 1 */}
-                  <div className="flex items-center space-x-3 mb-3 md:mb-0">
-                    <Image
-                      src={match.avatar1 || "/placeholder.svg"}
-                      alt="Avatar 1"
-                      width={40}
-                      height={40}
-                      className="rounded-full border-2 border-green-500"
-                    />
-                    <span className="font-semibold">{match.player1}</span>
-                  </div>
-
-            {/* Middle - Items */}
-<div className="flex items-center space-x-2 justify-center flex-1 mb-3 md:mb-0">
-  <div className="flex flex-wrap justify-center gap-2">
-    <div className="flex flex-wrap justify-center gap-2">
-      {match.items.map((item, idx) => (
-        <div key={idx} className="bg-purple-800 p-1 rounded-md flex items-center space-x-1">
-          <img
-            src={`/placeholder.svg?height=24&width=24`}
-            alt={item}
-            className="w-6 h-6 rounded"
-          />
-          <span className="text-xs">{item}</span>
-        </div>
-      ))}
-    </div>
-  </div>
-</div>
-
-
-                    <div className="flex items-center justify-center space-x-2 mx-2">
-                      <div className="text-center">
-                        <div className="text-sm text-purple-300">Value</div>
-                        <div className="font-bold text-xs sm:text-sm">{match.value}</div>
-                      </div>
-
-                      <div className="flex items-center">
-                        <Image
-                          src="/heads.webp"
-                          alt="Heads"
-                          width={24}
-                          height={24}
-                          className="border border-purple-500 rounded-full"
-                        />
-                        {match.player2 !== "waiting..." && (
-                          <>
-                            <span className="text-xs mx-1">vs</span>
-                            <Image
-                              src="/tails.webp"
-                              alt="Tails"
-                              width={24}
-                              height={24}
-                              className="border border-purple-500 rounded-full"
-                            />
-                          </>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Player 2 or Join Button */}
-                    <div className="flex items-center justify-end space-x-3">
-                      {match.player2 === "waiting..." ? (
-                        <Button
-                          variant="outline"
-                          className="bg-green-600/70 text-white border-green-500 hover:bg-green-500"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleJoinGame(match.id);
-                          }}
-                        >
-                          Join
-                        </Button>
-                      ) : (
-                        <div className="flex items-center space-x-3">
-                          <span className="font-semibold">{match.player2}</span>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {matches.map((game) => (
+                  <motion.div
+                    key={game.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="bg-gradient-to-r from-purple-900/40 to-indigo-900/40 rounded-xl shadow-lg border border-purple-700/30 overflow-hidden cursor-pointer hover:shadow-purple-500/20 hover:border-purple-600/50 transition-all duration-300"
+                    onClick={() => openGameDetails(game)}
+                  >
+                    <div className="p-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <div className="flex items-center gap-2">
                           <Image
-                            src={match.avatar2 || "/placeholder.svg"}
-                            alt="Avatar 2"
-                            width={40}
-                            height={40}
-                            className="rounded-full border-2 border-red-500"
+                            src={game.avatar1 || "/placeholder.svg?height=32&width=32"}
+                            alt={game.player1}
+                            width={32}
+                            height={32}
+                            className="rounded-full border border-purple-500"
+                          />
+                          <span className="font-medium">{game.player1}</span>
+                        </div>
+
+                        <div className="flex items-center gap-1">
+                          <Image
+                            src={game.choice === "Heads" ? "/heads.webp" : "/tails.webp"}
+                            alt={game.choice}
+                            width={24}
+                            height={24}
+                            className="rounded-full"
                           />
                         </div>
-                      )}
+
+                        <div className="flex items-center gap-2">
+                          {game.player2 !== "waiting..." ? (
+                            <>
+                              <span className="font-medium">{game.player2}</span>
+                              <Image
+                                src={game.avatar2 || "/placeholder.svg?height=32&width=32"}
+                                alt={game.player2}
+                                width={32}
+                                height={32}
+                                className="rounded-full border border-purple-500"
+                              />
+                            </>
+                          ) : (
+                            <span className="text-purple-300 italic text-sm">Waiting...</span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex justify-center my-2 gap-2">
+                        {game.items.slice(0, 3).map((item: string, idx: number) => (
+                          <div key={idx} className="w-10 h-10 rounded-md bg-purple-800/50 border border-purple-600/50 flex items-center justify-center">
+                            <img
+                              src={`/placeholder.svg?height=32&width=32`}
+                              alt={item}
+                              className="w-8 h-8 rounded-sm"
+                            />
+                          </div>
+                        ))}
+                        {game.items.length > 3 && (
+                          <div className="w-10 h-10 rounded-md bg-purple-800/50 border border-purple-600/50 flex items-center justify-center text-sm">
+                            +{game.items.length - 3}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="text-center text-sm text-purple-300">{game.value}</div>
+
+                      <div className="mt-3 flex justify-between items-center text-xs">
+                        <div className="flex items-center gap-1 text-gray-400">
+                          <Clock className="h-3 w-3" />
+                          {game.timestamp}
+                        </div>
+                        <div>
+                          {game.status === "open" ? (
+                            <Badge className="bg-green-600/80">Open</Badge>
+                          ) : (
+                            <Badge className="bg-blue-600/80">In Progress</Badge>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </motion.div>
                 ))}
-            </div>
-          </div>
+              </div>
 
-          {/* Recent Completed Games */}
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Recent Completed Games</h2>
+              {matches.length === 0 && (
+                <div className="text-center py-12 text-gray-400">
+                  <HandCoins className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                  <p>No active games available</p>
+                  <Button 
+                    onClick={() => setIsPopupOpen(true)}
+                    className="mt-4 bg-gradient-to-r from-indigo-600 to-purple-600"
+                  >
+                    Create a Game
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Recent Games */}
+          {activeTab === "recent" && (
             <div className="space-y-4">
-              {/* Example completed game */}
-              <motion.div
-                whileHover={{ scale: 1.01 }}
-                className="bg-gradient-to-r from-purple-900/70 to-indigo-900/70 p-4 rounded-lg flex flex-wrap md:flex-nowrap items-center justify-between shadow-md border border-purple-800/30"
-              >
-                {/* Player 1 */}
-                <div className="flex items-center space-x-3 mb-3 md:mb-0">
-                  <div className="relative">
-                    <Image
-                      src="/placeholder.svg"
-                      alt="Avatar 1"
-                      width={40}
-                      height={40}
-                      className="rounded-full border-2 border-green-500"
-                    />
-                    <div className="absolute -bottom-1 -right-1 bg-green-500 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center border border-purple-900">
-                      W
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {recentGames.map((game) => (
+                  <motion.div
+                    key={game.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="bg-gradient-to-r from-purple-900/40 to-indigo-900/40 rounded-xl shadow-lg border border-purple-700/30 overflow-hidden hover:shadow-purple-500/20 hover:border-purple-600/50 transition-all duration-300"
+                  >
+                    <div className="p-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <div className="flex items-center gap-2">
+                          <Image
+                            src={game.avatar1 || "/placeholder.svg?height=32&width=32"}
+                            alt={game.player1}
+                            width={32}
+                            height={32}
+                            className={`rounded-full border ${game.winner === "player1" ? "border-green-500 shadow-green-500/50" : "border-red-500"}`}
+                          />
+                          <span className={`font-medium ${game.winner === "player1" ? "text-green-300" : "text-red-300"}`}>{game.player1}</span>
+                        </div>
+
+                        <div className="text-center">
+                          <div className="flex items-center justify-center gap-2">
+                            <Image
+                              src={game.winnerChoice === "Heads" ? "/heads.webp" : "/tails.webp"}
+                              alt={game.winnerChoice}
+                              width={24}
+                              height={24}
+                              className="rounded-full border border-green-500"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className={`font-medium ${game.winner === "player2" ? "text-green-300" : "text-red-300"}`}>{game.player2}</span>
+                          <Image
+                            src={game.avatar2 || "/placeholder.svg?height=32&width=32"}
+                            alt={game.player2}
+                            width={32}
+                            height={32}
+                            className={`rounded-full border ${game.winner === "player2" ? "border-green-500 shadow-green-500/50" : "border-red-500"}`}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex justify-center my-2 gap-2">
+                        {game.items.slice(0, 3).map((item: string, idx: number) => (
+                          <div key={idx} className="w-10 h-10 rounded-md bg-purple-800/50 border border-purple-600/50 flex items-center justify-center">
+                            <img
+                              src={`/placeholder.svg?height=32&width=32`}
+                              alt={item}
+                              className="w-8 h-8 rounded-sm"
+                            />
+                          </div>
+                        ))}
+                        {game.items.length > 3 && (
+                          <div className="w-10 h-10 rounded-md bg-purple-800/50 border border-purple-600/50 flex items-center justify-center text-sm">
+                            +{game.items.length - 3}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="text-center text-sm text-purple-300">{game.value}</div>
+
+                      <div className="mt-3 flex justify-between items-center text-xs">
+                        <div className="flex items-center gap-1 text-gray-400">
+                          <Clock className="h-3 w-3" />
+                          {game.timestamp}
+                        </div>
+                        <div>
+                          <Badge className={`${game.winner === "player1" ? "bg-indigo-600/80" : "bg-purple-600/80"}`}>
+                            {game.winner === "player1" ? game.player1 : game.player2} Won
+                          </Badge>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <span className="font-semibold">bot1</span>
+                  </motion.div>
+                ))}
+              </div>
+
+              {recentGames.length === 0 && (
+                <div className="text-center py-12 text-gray-400">
+                  <Trophy className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                  <p>No recent games to display</p>
                 </div>
-
-                {/* Middle - Items & Result */}
-                <div className="flex items-center space-x-4 justify-center flex-1 mb-3 md:mb-0">
-                  <div className="flex flex-wrap justify-center gap-2">
-                    <div className="bg-purple-800 p-1 rounded-md flex items-center space-x-1">
-                      <img
-                        src={`/placeholder.svg?height=24&width=24`}
-                        alt="Item"
-                        className="w-6 h-6 rounded"
-                      />
-                      <span className="text-xs">Bioblade</span>
-                    </div>
-                    <div className="bg-purple-800 p-1 rounded-md flex items-center space-x-1">
-                      <img
-                        src={`/placeholder.svg?height=24&width=24`}
-                        alt="Item"
-                        className="w-6 h-6 rounded"
-                      />
-                      <span className="text-xs">Harvester</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col items-center">
-                    <div className="flex items-center">
-                      <Image
-                        src="/heads.webp"
-                        alt="Heads"
-                        width={24}
-                        height={24}
-                        className="border-2 border-green-500 rounded-full"
-                      />
-                    </div>
-                    <div className="text-xs text-green-300 mt-1">Won!</div>
-                  </div>
-                </div>
-
-                {/* Player 2 */}
-                <div className="flex items-center space-x-3 justify-end">
-                  <span className="font-semibold">bot2</span>
-                  <div className="relative">
-                    <Image
-                      src="/placeholder.svg"
-                      alt="Avatar 2"
-                      width={40}
-                      height={40}
-                      className="rounded-full border-2 border-red-500"
-                    />
-                    <div className="absolute -bottom-1 -right-1 bg-red-500 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center border border-purple-900">
-                      L
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Another example completed game */}
-              <motion.div
-                whileHover={{ scale: 1.01 }}
-                className="bg-gradient-to-r from-purple-900/70 to-indigo-900/70 p-4 rounded-lg flex flex-wrap md:flex-nowrap items-center justify-between shadow-md border border-purple-800/30"
-              >
-                {/* Player 1 */}
-                <div className="flex items-center space-x-3 mb-3 md:mb-0">
-                  <div className="relative">
-                    <Image
-                      src="/placeholder.svg"
-                      alt="Avatar 1"
-                      width={40}
-                      height={40}
-                      className="rounded-full border-2 border-red-500"
-                    />
-                    <div className="absolute -bottom-1 -right-1 bg-red-500 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center border border-purple-900">
-                      L
-                    </div>
-                  </div>
-                  <span className="font-semibold">bot2</span>
-                </div>
-
-                {/* Middle - Items & Result */}
-                <div className="flex items-center space-x-4 justify-center flex-1 mb-3 md:mb-0">
-                  <div className="flex flex-wrap justify-center gap-2">
-                    <div className="bg-purple-800 p-1 rounded-md flex items-center space-x-1">
-                      <img
-                        src={`/placeholder.svg?height=24&width=24`}
-                        alt="Item"
-                        className="w-6 h-6 rounded"
-                      />
-                      <span className="text-xs">Ghostblade</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col items-center">
-                    <div className="flex items-center">
-                      <Image
-                        src="/tails.webp"
-                        alt="Tails"
-                        width={24}
-                        height={24}
-                        className="border-2 border-red-500 rounded-full"
-                      />
-                    </div>
-                    <div className="text-xs text-red-300 mt-1">Lost!</div>
-                  </div>
-                </div>
-
-                {/* Player 2 */}
-                <div className="flex items-center space-x-3 justify-end">
-                  <span className="font-semibold">bot3</span>
-                  <div className="relative">
-                    <Image
-                      src="/placeholder.svg"
-                      alt="Avatar 2"
-                      width={40}
-                      height={40}
-                      className="rounded-full border-2 border-green-500"
-                    />
-                    <div className="absolute -bottom-1 -right-1 bg-green-500 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center border border-purple-900">
-                      W
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+              )}
             </div>
-          </div>
-        </div>
-
-        {/* Popups */}
-        {isHistoryPopupOpen && <HistoryPopup closePopup={closeHistoryPopup} />}
-        {isGameDetailsPopupOpen && selectedGame && (
-          <GameDetailsPopup game={selectedGame} closePopup={closeGameDetailsPopup} />
-        )}
-        {isPopupOpen && (
-          <InventoryPopup
-            items={items}
-            selectedItems={selectedItems}
-            handleItemClick={handleItemClick}
-            handleSelectAll={handleSelectAll}
-            closePopup={closePopup}
-            handleFlip={handleFlip}
-          />
-        )}
+          )}
+        </main>
       </div>
-    </div>
-  );
-};
 
-export default CoinFlip;
+      {/* Popups */}
+      {isPopupOpen && (
+        <InventoryPopup
+          items={items}
+          selectedItems={selectedItems}
+          handleItemClick={handleItemClick}
+          handleSelectAll={handleSelectAll}
+          closePopup={() => setIsPopupOpen(false)}
+          handleFlip={handleFlip}
+        />
+      )}
+
+      {isHistoryPopupOpen && <HistoryPopup closePopup={() => setIsHistoryPopupOpen(false)} />}
+
+      {isGameDetailsPopupOpen && selectedGame && (
+        <GameDetailsPopup game={selectedGame} closePopup={() => setIsGameDetailsPopupOpen(false)} />
+      )}
+    </div>
+  )
+}
+
+export default CoinFlip
