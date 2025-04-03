@@ -1,6 +1,8 @@
-// components/lead/lead.tsx
+"use client"
 import { FC } from 'react';
 import { Sidebar } from '../sidebar/sidebar';
+import { motion } from 'framer-motion';
+
 interface LeaderboardEntry {
   rank: number;
   username: string;
@@ -9,96 +11,83 @@ interface LeaderboardEntry {
   rankChange: number;
 }
 
-// Sample leaderboard data (replace with dynamic data if needed)
 const leaderboardData: LeaderboardEntry[] = [
   { rank: 1, username: 'Alice', score: 1200, avatarUrl: '/avatar1.jpg', rankChange: 0 },
   { rank: 2, username: 'Bob', score: 1150, avatarUrl: '/avatar2.jpg', rankChange: -1 },
   { rank: 3, username: 'Charlie', score: 1100, avatarUrl: '/avatar3.jpg', rankChange: 1 },
   { rank: 4, username: 'David', score: 1000, avatarUrl: '/avatar4.jpg', rankChange: 0 },
   { rank: 5, username: 'Eve', score: 950, avatarUrl: '/avatar5.jpg', rankChange: -2 },
+  { rank: 6, username: 'Frank', score: 900, avatarUrl: '/avatar6.jpg', rankChange: 1 },
+  { rank: 7, username: 'Grace', score: 850, avatarUrl: '/avatar7.jpg', rankChange: -1 },
+  { rank: 8, username: 'Hank', score: 800, avatarUrl: '/avatar8.jpg', rankChange: 0 },
+  { rank: 9, username: 'Ivy', score: 750, avatarUrl: '/avatar9.jpg', rankChange: 2 },
+  { rank: 10, username: 'Jack', score: 700, avatarUrl: '/avatar10.jpg', rankChange: -3 }
 ];
 
 const Leaderboard: FC = () => {
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Sidebar component */}
+    <div className="flex min-h-screen bg-gradient-to-br from-purple-900 to-indigo-900 text-white overflow-hidden">
       <Sidebar />
+      
+      <div className="flex-1 flex flex-col items-center p-6">
+        <motion.header 
+          className="bg-purple-800 p-6 shadow-lg w-full rounded-xl text-center mb-6"
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h1 className="text-4xl font-bold text-white">Leaderboard</h1>
+        </motion.header>
 
-      {/* Main content area */}
-      <div className="flex-1">
-        <header className="bg-blue-600 text-white p-4 shadow-md">
-          <div className="flex justify-between items-center max-w-7xl mx-auto">
-            <div className="text-lg font-semibold">Leaderboard</div>
-            <div className="flex items-center space-x-4">
-              <div>Logo</div> {/* Replace with your logo */}
-              <button className="bg-blue-500 px-4 py-2 rounded-md">Profile</button>
-            </div>
-          </div>
-        </header>
-
-        <main className="py-8 max-w-7xl mx-auto px-4">
-          <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
-            <div className="flex justify-between items-center p-4">
-              <h2 className="text-2xl font-semibold">Top Players</h2>
-              <div className="flex items-center space-x-4">
-                <button className="bg-green-500 text-white px-4 py-2 rounded-md">
-                  Weekly
-                </button>
-                <button className="bg-gray-300 dark:bg-gray-700 text-black dark:text-white px-4 py-2 rounded-md">
-                  All Time
-                </button>
-              </div>
-            </div>
-
-            <table className="min-w-full table-auto">
-              <thead>
-                <tr className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
-                  <th className="py-2 px-4 text-left">Rank</th>
-                  <th className="py-2 px-4 text-left">Username</th>
-                  <th className="py-2 px-4 text-left">Score</th>
-                  <th className="py-2 px-4 text-left">Change</th>
-                  <th className="py-2 px-4">Avatar</th>
-                </tr>
-              </thead>
-              <tbody>
-                {leaderboardData.map((entry) => (
-                  <tr key={entry.rank} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                    <td className="py-3 px-4">{entry.rank}</td>
-                    <td className="py-3 px-4">{entry.username}</td>
-                    <td className="py-3 px-4">{entry.score}</td>
-                    <td className="py-3 px-4">
-                      <span
-                        className={`${
-                          entry.rankChange > 0
-                            ? 'text-green-500'
-                            : entry.rankChange < 0
-                            ? 'text-red-500'
-                            : 'text-gray-500'
-                        }`}
-                      >
-                        {entry.rankChange > 0 ? `+${entry.rankChange}` : entry.rankChange}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4">
-                      <img src={entry.avatarUrl} alt={`${entry.username} Avatar`} className="w-10 h-10 rounded-full" />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="mt-8 text-center">
-            <p className="text-xl font-semibold">Want to be on the leaderboard?</p>
-            <button className="bg-blue-600 text-white px-6 py-3 rounded-md mt-4">Start Now</button>
-          </div>
-        </main>
-
-        <footer className="bg-gray-800 text-white py-4">
-          <div className="max-w-7xl mx-auto flex justify-center">
-            <div>Privacy Policy | Terms of Service | Contact Us</div>
-          </div>
-        </footer>
+        <motion.div 
+          className="bg-purple-950 shadow-lg rounded-xl overflow-hidden p-6 w-full max-w-4xl"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <table className="min-w-full border-collapse text-center">
+            <thead>
+              <tr className="bg-purple-700 text-white text-lg">
+                <th className="py-3 px-4">Rank</th>
+                <th className="py-3 px-4">Username</th>
+                <th className="py-3 px-4">Score</th>
+                <th className="py-3 px-4">Change</th>
+                <th className="py-3 px-4">Avatar</th>
+              </tr>
+            </thead>
+            <tbody>
+              {leaderboardData.map((entry, index) => (
+                <motion.tr 
+                  key={entry.rank} 
+                  className="hover:bg-purple-800 transition" 
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <td className="py-3 px-4 font-semibold">{entry.rank}</td>
+                  <td className="py-3 px-4">{entry.username}</td>
+                  <td className="py-3 px-4 font-semibold text-pink-400">{entry.score}</td>
+                  <td className="py-3 px-4">
+                    <span
+                      className={`${
+                        entry.rankChange > 0
+                          ? 'text-green-400'
+                          : entry.rankChange < 0
+                          ? 'text-red-400'
+                          : 'text-gray-400'
+                      }`}
+                    >
+                      {entry.rankChange > 0 ? `+${entry.rankChange}` : entry.rankChange}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4">
+                    <img src={entry.avatarUrl} alt={`${entry.username} Avatar`} className="w-10 h-10 rounded-full border-2 border-pink-500 mx-auto" />
+                  </td>
+                </motion.tr>
+              ))}
+            </tbody>
+          </table>
+        </motion.div>
       </div>
     </div>
   );
