@@ -16,17 +16,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        // Fetch all withdrawal items for the user that have not been withdrawn yet
-        const withdrawals = await Trade.find({
-            userId,
-            tradeType: "withdrawal",
-            withdrawn: false,
-        });
+        // Fetch all items for the user
+        const inventory = await Trade.find({ userId });
 
-        // Return the list of items to the bot
-        res.status(200).json(withdrawals);
+        res.status(200).json(inventory);
     } catch (error) {
-        console.error("Error fetching withdrawals:", error);
+        console.error("Error fetching inventory:", error);
         res.status(500).json({ message: "Server error" });
     }
 }

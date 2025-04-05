@@ -1,23 +1,19 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface ITrade extends Document {
-    userId: string;
-    tradeType: "deposit" | "withdrawal";
-    items: { id: string; name: string; count: number }[];
-    timestamp: Date;
+export interface TradeDocument extends Document {
+  userId: string;
+  tradeType: "deposit" | "withdrawal";
+  itemName: string;
+  count: number;
+  withdrawn: boolean; // New field to track withdrawal status
 }
 
-const TradeSchema = new Schema<ITrade>({
-    userId: { type: String, required: true },
-    tradeType: { type: String, enum: ["deposit", "withdrawal"], required: true },
-    items: [
-        {
-            id: { type: String, required: true, unique: true }, // Unique ID for each item
-            name: { type: String, required: true },
-            count: { type: Number, required: true },
-        },
-    ],
-    timestamp: { type: Date, default: Date.now },
+const TradeSchema = new Schema<TradeDocument>({
+  userId: { type: String, required: true },
+  tradeType: { type: String, enum: ["deposit", "withdrawal"], required: true },
+  itemName: { type: String, required: true },
+  count: { type: Number, required: true },
+  withdrawn: { type: Boolean, default: false }, // Default to false
 });
 
-export default mongoose.models.Trade || mongoose.model<ITrade>("Trade", TradeSchema);
+export default mongoose.models.Trade || mongoose.model<TradeDocument>("Trade", TradeSchema);
