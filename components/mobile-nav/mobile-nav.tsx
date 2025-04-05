@@ -9,8 +9,7 @@ import {
   Trophy,
   ShipWheel,
   HelpCircle,
-  FileText,
-  Settings,
+  FileText
 } from "lucide-react";
 
 const navigation = [

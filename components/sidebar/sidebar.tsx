@@ -10,7 +10,6 @@ import {
   HandCoins,
   HelpCircle,
   FileText,
-  Settings,
   ShipWheel,
   ChevronLeft,
   ChevronRight,

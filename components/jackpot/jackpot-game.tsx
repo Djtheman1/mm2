@@ -13,8 +13,6 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Sidebar } from "../sidebar/sidebar";
-import { MobileNav } from "../mobile-nav/mobile-nav";
 import { Layout } from "../layout/layout";
 
 // Types
@@ -42,17 +40,16 @@ export default function JackpotGame() {
   const [timeLeft, setTimeLeft] = useState(120);
   const [winner, setWinner] = useState<Player | null>(null);
   const [totalValue, setTotalValue] = useState(0);
-  const [spinProgress, setSpinProgress] = useState(0);
+  const [, setSpinProgress] = useState(0);
   const [expandedPlayer, setExpandedPlayer] = useState<string | null>(null);
   const [rotationAngle, setRotationAngle] = useState(0);
-  const [arrowPulse, setArrowPulse] = useState(false);
+  const [, setArrowPulse] = useState(false);
   const [showParticles, setShowParticles] = useState(false);
   const [highlightedSegment, setHighlightedSegment] = useState<string | null>(
     null
   );
 
   const wheelRef = useRef<HTMLDivElement>(null);
-  const indicatorRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLDivElement>(null);
   const spinTimeRef = useRef<number>(0);
   const spinDurationRef = useRef<number>(8000); // 8 seconds

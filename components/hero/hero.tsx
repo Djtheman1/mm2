@@ -19,7 +19,7 @@ export function Hero() {
 
   // Wallet Popup State
   const [isWalletOpen, setIsWalletOpen] = useState(false);
-  const [showNotification, setShowNotification] = useState(false); // Notification visibility
+  const [, setShowNotification] = useState(false); // Notification visibility
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   // Learn More Modal State
@@ -148,7 +148,7 @@ export function Hero() {
           handleWithdraw={handleWithdraw}
           closeWalletPopup={closeWalletPopup} handleDeposit={function (): void {
             throw new Error("Function not implemented.");
-          } } handleRedirect={function (type: string): void {
+          } } handleRedirect={function (): void {
             throw new Error("Function not implemented.");
           } }        />
       )}
@@ -160,9 +160,9 @@ export function Hero() {
             <h2 className="text-2xl font-bold mb-4">How to Deposit and Withdraw</h2>
             <p className="text-lg mb-4">
               To deposit items, simply select the items from your inventory and
-              click the "Deposit" button. The items will be added to your MM2
+              click the Deposit button. The items will be added to your MM2
               Amethyst account. To withdraw items, select the items you want to
-              withdraw and click "Withdraw" to initiate the transfer.
+              withdraw and click Withdraw to initiate the transfer.
             </p>
             <div className="flex justify-end">
               <Button onClick={closeModal} className="bg-purple-600 text-white">

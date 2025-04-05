@@ -4,16 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card } from "@/components/ui/card";
-import { Smile, Send, ChevronRight, MessageSquare, X, Users } from "lucide-react";
+import { Send, MessageSquare, X, Users } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import * as Popover from "@radix-ui/react-popover";
 
 // Initialize Socket.IO client
 const socket = io();
-
-// Emojis for quick selection
-const EMOJIS = ["😊", "😂", "❤️", "👍", "🔥", "✨", "🎮", "🎯", "🎲", "🎁", "💎", "🔪", "🔫"];
 
 export function Chat() {
   const [messages, setMessages] = useState<{ user: string; text: string; timestamp: Date }[]>([]);
@@ -71,10 +67,6 @@ export function Chat() {
       socket.emit("sendMessage", message);
       setInput("");
     }
-  };
-
-  const addEmoji = (emoji: string) => {
-    setInput((prev) => prev + emoji);
   };
 
   const formatTime = (date: Date) => {
