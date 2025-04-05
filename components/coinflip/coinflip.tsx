@@ -3,7 +3,7 @@ import { useState } from "react"
 import Image from "next/image"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Search, Filter, Calendar, ArrowUpDown, HandCoins, Eye, Trophy, Clock, Loader2 } from "lucide-react"
+import { Search, Filter, Calendar, ArrowUpDown, HandCoins, Trophy, Clock, Loader2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
@@ -631,7 +631,7 @@ const CoinFlip = () => {
   ])
 
   // Recent completed games data
-  const [recentGames, setRecentGames] = useState([
+  const [recentGames] = useState([
     {
       id: 101,
       player1: "bot1",
