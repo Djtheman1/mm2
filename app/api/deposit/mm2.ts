@@ -16,7 +16,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        // Save deposited items to the database
         for (const item of depositItems) {
             await Trade.create({
                 userId,
@@ -24,6 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 itemName: item.item_name,
                 count: item.count,
                 withdrawn: false,
+                timestamp: new Date(),
             });
         }
 

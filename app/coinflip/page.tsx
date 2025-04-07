@@ -1,3 +1,10 @@
-import CoinFlip from "@/components/coinflip/coinflip";
+import CoinFlip from "@/components/coinflip/coinflip"
+import { Layout } from "@/components/layout/layout"
 
-export default CoinFlip;
+export default function CoinFlipPage() {
+  return (
+    <Layout>
+      <CoinFlip />
+    </Layout>
+  )
+}

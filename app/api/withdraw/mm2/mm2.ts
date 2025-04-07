@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { connectToDatabase } from "../../../lib/mongodb";
-import Trade from "../../../models/Trade";
+import { connectToDatabase } from "@/lib/mongodb";
+import Trade from "@/models/Trade";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== "POST") {
@@ -23,7 +23,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             withdrawn: false,
         });
 
-        // Return the list of items to the bot
         res.status(200).json(withdrawals);
     } catch (error) {
         console.error("Error fetching withdrawals:", error);

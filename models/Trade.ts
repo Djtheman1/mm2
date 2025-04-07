@@ -5,7 +5,8 @@ export interface TradeDocument extends Document {
   tradeType: "deposit" | "withdrawal";
   itemName: string;
   count: number;
-  withdrawn: boolean; // New field to track withdrawal status
+  withdrawn: boolean;
+  timestamp: Date;
 }
 
 const TradeSchema = new Schema<TradeDocument>({
@@ -13,7 +14,9 @@ const TradeSchema = new Schema<TradeDocument>({
   tradeType: { type: String, enum: ["deposit", "withdrawal"], required: true },
   itemName: { type: String, required: true },
   count: { type: Number, required: true },
-  withdrawn: { type: Boolean, default: false }, // Default to false
+  withdrawn: { type: Boolean, default: false },
+  timestamp: { type: Date, default: Date.now },
 });
 
-export default mongoose.models.Trade || mongoose.model<TradeDocument>("Trade", TradeSchema);
+// Explicitly specify the collection name as "inv"
+export default mongoose.models.Trade || mongoose.model<TradeDocument>("Trade", TradeSchema, "inv");
