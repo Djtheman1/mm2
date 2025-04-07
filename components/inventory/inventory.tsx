@@ -22,8 +22,6 @@ export function WalletPopup({
   handleItemClick,
   handleSelectAll,
   handleWithdraw,
-  handleDeposit,
-  handleRedirect,
   closeWalletPopup,
 }: WalletPopupProps) {
   const [showWithdrawNotification, setShowWithdrawNotification] = useState(false);

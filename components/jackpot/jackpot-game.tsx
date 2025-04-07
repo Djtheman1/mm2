@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Clock, Diamond, Trophy, Sparkles, Plus, ChevronDown, Zap } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Layout } from "../layout/layout"
-import { motion, AnimatePresence } from "framer-motion"
 
 // Types
 type Player = {
