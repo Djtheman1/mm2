@@ -28,6 +28,6 @@
     ".next/types/**/*.ts",
     "tailwind.config.js", // Include Tailwind config
     "postcss.config.js"   // Include PostCSS config
-  ],
+, "models/Message.js", "models/Trade.js"  ],
   "exclude": ["node_modules"]
 }
