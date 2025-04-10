@@ -1,7 +1,7 @@
 "use client"
 import { FC } from 'react';
-import { Sidebar } from '../sidebar/sidebar';
 import { motion } from 'framer-motion';
+import Image from "next/image";
 
 interface LeaderboardEntry {
   rank: number;
@@ -26,8 +26,6 @@ const leaderboardData: LeaderboardEntry[] = [
 const Leaderboard: FC = () => {
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-purple-900 to-indigo-900 text-white overflow-hidden">
-      
-      
       <div className="flex-1 flex flex-col items-center p-6">
         <motion.header 
           className="bg-purple-800 p-6 shadow-lg w-full rounded-xl text-center mb-6"
@@ -66,7 +64,13 @@ const Leaderboard: FC = () => {
                   <td className="py-3 px-4">{entry.username}</td>
                   <td className="py-3 px-4 font-semibold text-pink-400">{entry.wagered}</td>
                   <td className="py-3 px-4">
-                    <img src={entry.avatarUrl} alt={`${entry.username} Avatar`} className="w-10 h-10 rounded-full border-2 border-pink-500 mx-auto" />
+                    <Image
+                      src={entry.avatarUrl}
+                      alt={`${entry.username} Avatar`}
+                      width={40}
+                      height={40}
+                      className="rounded-full"
+                    />
                   </td>
                 </motion.tr>
               ))}

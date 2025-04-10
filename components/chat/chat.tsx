@@ -28,12 +28,12 @@ export function Chat() {
     socket.emit("loadMessages");
 
     // Listen for the "loadMessages" event from the server
-    socket.on("loadMessages", (loadedMessages) => {
-      const formattedMessages = loadedMessages.map((msg: any) => ({
+    socket.on("loadMessages", (loadedMessages: { user: string; text: string; timestamp: string }[]) => {
+      const formattedMessages = loadedMessages.map((msg) => ({
         ...msg,
         timestamp: new Date(msg.timestamp), // Ensure timestamp is a Date object
       }));
-      setMessages(formattedMessages); // Update state with messages from the server
+      setMessages(formattedMessages);
     });
 
     return () => {
@@ -43,7 +43,7 @@ export function Chat() {
 
   // Listen for incoming messages
   useEffect(() => {
-    socket.on("receiveMessage", (message: { user: string; text: string; timestamp: any }) => {
+    socket.on("receiveMessage", (message: { user: string; text: string; timestamp: string }) => {
       const newMessage = {
         ...message,
         timestamp: new Date(message.timestamp), // Ensure timestamp is a Date object

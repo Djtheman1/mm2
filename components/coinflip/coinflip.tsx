@@ -9,6 +9,14 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
+<Image
+  src="/path/to/image.jpg"
+  alt="Description"
+  width={100}
+  height={100}
+  className="rounded-lg"
+/>
+
 // History Popup Component remains unchanged
 const HistoryPopup = ({ closePopup }: { closePopup: () => void }) => {
   const [searchQuery, setSearchQuery] = useState("")
@@ -286,8 +294,30 @@ const HistoryPopup = ({ closePopup }: { closePopup: () => void }) => {
   )
 }
 
+// Define interfaces for game and item data
+interface Game {
+  id: number;
+  player1: string;
+  avatar1: string;
+  player2: string;
+  avatar2: string;
+  items: string[];
+  value: string;
+  range: string;
+  choice: string;
+  player2Choice?: string;
+  status: string;
+  timestamp: string;
+}
+
+interface Item {
+  name: string;
+  rarity: string;
+  image: string;
+}
+
 // Enhanced Game Details Popup
-const GameDetailsPopup = ({ game, closePopup }: { game: any; closePopup: () => void }) => {
+const GameDetailsPopup = ({ game, closePopup }: { game: Game; closePopup: () => void }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
       <motion.div
@@ -434,8 +464,22 @@ const GameDetailsPopup = ({ game, closePopup }: { game: any; closePopup: () => v
   )
 }
 
-// Inventory Popup Component remains unchanged
-const InventoryPopup = ({ items, selectedItems, handleItemClick, handleSelectAll, closePopup, handleFlip }: any) => {
+// Enhanced Inventory Popup Component
+const InventoryPopup = ({
+  items,
+  selectedItems,
+  handleItemClick,
+  handleSelectAll,
+  closePopup,
+  handleFlip,
+}: {
+  items: Item[];
+  selectedItems: string[];
+  handleItemClick: (itemName: string) => void;
+  handleSelectAll: () => void;
+  closePopup: () => void;
+  handleFlip: (selectedCoin: string) => void;
+}) => {
   const [selectedCoin, setSelectedCoin] = useState<string | null>(null)
   const [coinAnimation, setCoinAnimation] = useState(false)
 
@@ -479,7 +523,7 @@ const InventoryPopup = ({ items, selectedItems, handleItemClick, handleSelectAll
 
           {/* Grid for Inventory Items - MODIFIED TO MAKE ITEMS SMALLER */}
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2 mt-4">
-            {items.map((item: any, index: number) => (
+            {items.map((item: Item, index: number) => (
               <motion.div
                 key={index}
                 className={`bg-gradient-to-br from-indigo-900 to-purple-700 p-2 rounded-lg shadow-md transform transition-all duration-300 ${selectedItems.includes(item.name) ? "border-2 border-indigo-500" : ""}`}
@@ -583,7 +627,7 @@ const InventoryPopup = ({ items, selectedItems, handleItemClick, handleSelectAll
 
 // Enhanced CoinFlip Component with fixed sidebar layout
 const CoinFlip = () => {
-  const [items] = useState([
+  const [items] = useState<Item[]>([
     { name: "Bauble", rarity: "", image: "/mm2_godlies/Bauble.png" },
     { name: "Evergreen", rarity: "", image: "/mm2_godlies/Evergreen.png" },
     { name: "Evergun", rarity: "", image: "/mm2_godlies/Evergun.png" },
@@ -595,11 +639,11 @@ const CoinFlip = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false)
   const [isHistoryPopupOpen, setIsHistoryPopupOpen] = useState(false)
   const [isGameDetailsPopupOpen, setIsGameDetailsPopupOpen] = useState(false)
-  const [selectedGame, setSelectedGame] = useState<any>(null)
+  const [selectedGame, setSelectedGame] = useState<Game | null>(null)
   const [activeTab, setActiveTab] = useState("active")
 
   // Enhanced matches data
-  const [matches, setMatches] = useState([
+  const [matches, setMatches] = useState<Game[]>([
     {
       id: 1,
       player1: "bot1",
@@ -630,7 +674,7 @@ const CoinFlip = () => {
   ])
 
   // Recent completed games data
-  const [recentGames] = useState([
+  const [recentGames] = useState<Game[]>([
     {
       id: 101,
       player1: "bot1",
@@ -639,9 +683,10 @@ const CoinFlip = () => {
       avatar2: "",
       items: ["Bioblade", "Harvester"],
       value: "Unknown",
-      winnerChoice: "Heads",
-      loserChoice: "Tails",
-      winner: "player1",
+      range: "Unknown - Unknown",
+      choice: "Heads",
+      player2Choice: "Tails",
+      status: "completed",
       timestamp: "10 min ago",
     },
     {
@@ -652,9 +697,10 @@ const CoinFlip = () => {
       avatar2: "",
       items: ["Ghostblade"],
       value: "Unknown",
-      winnerChoice: "Heads",
-      loserChoice: "Tails",
-      winner: "player2",
+      range: "Unknown - Unknown",
+      choice: "Heads",
+      player2Choice: "Tails",
+      status: "completed",
       timestamp: "25 min ago",
     },
     {
@@ -665,9 +711,10 @@ const CoinFlip = () => {
       avatar2: "",
       items: ["Lugar", "Harvester"],
       value: "Unknown",
-      winnerChoice: "Tails",
-      loserChoice: "Heads",
-      winner: "player1",
+      range: "Unknown - Unknown",
+      choice: "Tails",
+      player2Choice: "Heads",
+      status: "completed",
       timestamp: "42 min ago",
     },
   ])
@@ -690,7 +737,7 @@ const CoinFlip = () => {
 
   const handleFlip = (selectedCoin: string) => {
     // Add game to matches with status open
-    const newGame = {
+    const newGame: Game = {
       id: Date.now(),
       player1: "bot1", // Would be current user in real app
       avatar1: "",
@@ -709,9 +756,21 @@ const CoinFlip = () => {
     setIsPopupOpen(false)
   }
 
-  const openGameDetails = (game: any) => {
+  const openGameDetails = (game: Game) => {
     setSelectedGame(game)
     setIsGameDetailsPopupOpen(true)
+  }
+
+  interface CoinflipEvent {
+    type: string;
+    payload: {
+      id: string;
+      value: number;
+    };
+  }
+
+  const _handleEvent = (event: CoinflipEvent) => {
+    console.log(event.type, event.payload.id, event.payload.value);
   }
 
   return (
@@ -885,16 +944,16 @@ const CoinFlip = () => {
                             alt={game.player1}
                             width={32}
                             height={32}
-                            className={`rounded-full border ${game.winner === "player1" ? "border-green-500 shadow-green-500/50" : "border-red-500"}`}
+                            className={`rounded-full border ${game.status === "completed" && game.choice === "Heads" ? "border-green-500 shadow-green-500/50" : "border-red-500"}`}
                           />
-                          <span className={`font-medium ${game.winner === "player1" ? "text-green-300" : "text-red-300"}`}>{game.player1}</span>
+                          <span className={`font-medium ${game.status === "completed" && game.choice === "Heads" ? "text-green-300" : "text-red-300"}`}>{game.player1}</span>
                         </div>
 
                         <div className="text-center">
                           <div className="flex items-center justify-center gap-2">
                             <Image
-                              src={game.winnerChoice === "Heads" ? "/heads.webp" : "/tails.webp"}
-                              alt={game.winnerChoice}
+                              src={game.choice === "Heads" ? "/heads.webp" : "/tails.webp"}
+                              alt={game.choice}
                               width={24}
                               height={24}
                               className="rounded-full border border-green-500"
@@ -903,13 +962,13 @@ const CoinFlip = () => {
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <span className={`font-medium ${game.winner === "player2" ? "text-green-300" : "text-red-300"}`}>{game.player2}</span>
+                          <span className={`font-medium ${game.status === "completed" && game.choice === "Tails" ? "text-green-300" : "text-red-300"}`}>{game.player2}</span>
                           <Image
                             src={game.avatar2 || "/placeholder.svg?height=32&width=32"}
                             alt={game.player2}
                             width={32}
                             height={32}
-                            className={`rounded-full border ${game.winner === "player2" ? "border-green-500 shadow-green-500/50" : "border-red-500"}`}
+                            className={`rounded-full border ${game.status === "completed" && game.choice === "Tails" ? "border-green-500 shadow-green-500/50" : "border-red-500"}`}
                           />
                         </div>
                       </div>
@@ -939,8 +998,8 @@ const CoinFlip = () => {
                           {game.timestamp}
                         </div>
                         <div>
-                          <Badge className={`${game.winner === "player1" ? "bg-indigo-600/80" : "bg-purple-600/80"}`}>
-                            {game.winner === "player1" ? game.player1 : game.player2} Won
+                          <Badge className={`${game.status === "completed" && game.choice === "Heads" ? "bg-indigo-600/80" : "bg-purple-600/80"}`}>
+                            {game.status === "completed" && game.choice === "Heads" ? game.player1 : game.player2} Won
                           </Badge>
                         </div>
                       </div>
