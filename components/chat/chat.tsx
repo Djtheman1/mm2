@@ -9,14 +9,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
 
 // Initialize Socket.IO client
-const socket = io();
+const socket = io("http://localhost:3000");
 
 export function Chat() {
   const [messages, setMessages] = useState<{ user: string; text: string; timestamp: Date }[]>([]);
-  "use client";
-
-  const username = localStorage.getItem("username");
-
   const [input, setInput] = useState("");
   const [isChatVisible, setIsChatVisible] = useState(true);
   const [isFullyCollapsed, setIsFullyCollapsed] = useState(false);
@@ -24,12 +20,33 @@ export function Chat() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
+  const username = localStorage.getItem("username") || "Anonymous";
+
+  // Load persisted messages from the server
+  useEffect(() => {
+    // Request the last 50 messages when the component mounts
+    socket.emit("loadMessages");
+
+    // Listen for the "loadMessages" event from the server
+    socket.on("loadMessages", (loadedMessages) => {
+      const formattedMessages = loadedMessages.map((msg: any) => ({
+        ...msg,
+        timestamp: new Date(msg.timestamp), // Ensure timestamp is a Date object
+      }));
+      setMessages(formattedMessages); // Update state with messages from the server
+    });
+
+    return () => {
+      socket.off("loadMessages");
+    };
+  }, []);
+
   // Listen for incoming messages
   useEffect(() => {
     socket.on("receiveMessage", (message: { user: string; text: string; timestamp: any }) => {
       const newMessage = {
         ...message,
-        timestamp: new Date(message.timestamp),
+        timestamp: new Date(message.timestamp), // Ensure timestamp is a Date object
       };
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
@@ -50,6 +67,7 @@ export function Chat() {
     };
   }, []);
 
+  // Scroll to the bottom of the chat when messages change
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;

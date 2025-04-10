@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { connectToDatabase } from "../../../lib/mongodb";
-import Trade from "../../../models/Trade";
+import { connectToDatabase } from "@/lib/mongodb";
+import Trade from "@/models/Trade";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== "POST") {
@@ -16,7 +16,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        const withdrawals = await Trade.find({ userId, tradeType: "withdrawal" });
+        // Fetch all withdrawal items for the user that have not been withdrawn yet
+        const withdrawals = await Trade.find({
+            userId,
+            tradeType: "withdrawal",
+            withdrawn: false,
+        });
 
         res.status(200).json(withdrawals);
     } catch (error) {

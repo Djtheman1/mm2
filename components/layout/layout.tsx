@@ -1,3 +1,5 @@
+"use client"; // Mark this file as a Client Component
+
 import type React from "react";
 import { Sidebar } from "@/components/sidebar/sidebar";
 import { Chat } from "@/components/chat/chat";

@@ -1,11 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { WalletPopup } from "../inventory/inventory"; // Import your WalletPopup component
+import { WalletPopup } from "../inventory/inventory";
 
 export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -17,73 +16,24 @@ export function Hero() {
   const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
-  // Wallet Popup State
+  // State for Wallet Popup
   const [isWalletOpen, setIsWalletOpen] = useState(false);
-  const [, setShowNotification] = useState(false); // Notification visibility
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
-  // Learn More Modal State
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // Sample MM2 Items
-  const items = [
-    { name: "Bauble", rarity: "Bauble", image: "/mm2_godlies/Bauble.png" },
-    { name: "Evergreen", rarity: "Evergreen", image: "/mm2_godlies/Evergreen.png" },
-    { name: "Evergun", rarity: "Evergun", image: "/mm2_godlies/Evergun.png" },
-  ];
-
-  // Handle item selection
-  const handleItemClick = (itemName: string) => {
-    setSelectedItems((prevSelectedItems) =>
-      prevSelectedItems.includes(itemName)
-        ? prevSelectedItems.filter((item) => item !== itemName)
-        : [...prevSelectedItems, itemName]
-    );
-  };
-
-  // Handle Select All
-  const handleSelectAll = () => {
-    if (selectedItems.length === items.length) {
-      setSelectedItems([]); // Deselect all
-    } else {
-      setSelectedItems(items.map(item => item.name)); // Select all
-    }
-  };
-
-  // Handle Withdraw
-  const handleWithdraw = () => {
-    if (selectedItems.length === 0) {
-      setShowNotification(true); // Show the notification if no item is selected
-      setTimeout(() => setShowNotification(false), 5000); // Hide after 5 seconds
-      return;
-    }
-    const robloxGameURL = `https://robloxlinkwithdraw.com?items=${selectedItems.join(",")}`;
-    window.open(robloxGameURL, "_blank");
-  };
-
-  // Handle Close Wallet Popup
-  const closeWalletPopup = () => {
-    setIsWalletOpen(false);
-  };
-
-  // Handle "Learn More" Modal
-  const handleLearnMore = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  // Handlers for WalletPopup
+  const closeWalletPopup = () => setIsWalletOpen(false);
 
   return (
     <section ref={ref} className="py-20 md:py-32 relative overflow-hidden">
+      {/* Background Animation */}
       <motion.div className="absolute inset-0 z-0" style={{ y, opacity }}>
         <div className="absolute top-1/4 left-1/2 w-[500px] h-[500px] bg-gradient-to-br from-pink-500/20 to-purple-600/20 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 left-2/5 w-[400px] h-[400px] bg-gradient-to-br from-indigo-500/20 to-blue-600/20 rounded-full blur-3xl"></div>
       </motion.div>
 
+      {/* Hero Content */}
       <div className="container mx-auto px-12 relative z-10">
         <div className="flex flex-col md:flex-row items-center">
+          {/* Text Section */}
           <motion.div
             className="md:w-1/2 mb-10 md:mb-0"
             initial={{ opacity: 0, y: 20 }}
@@ -107,17 +57,10 @@ export function Hero() {
                 Deposit/Withdraw
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
-
-              <Button
-                onClick={handleLearnMore} // Open Learn More Modal
-                variant="outline"
-                className="border-purple-500/30 text-purple-200 hover:bg-purple-800/30 hover:text-white"
-              >
-                Learn More
-              </Button>
             </div>
           </motion.div>
 
+          {/* Image Section */}
           <motion.div
             className="md:w-1/2 relative"
             initial={{ opacity: 0, scale: 0.8 }}
@@ -126,7 +69,7 @@ export function Hero() {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-purple-600/20 rounded-full blur-3xl"></div>
             <div className="relative z-10">
-              <Image
+              <img
                 src="/gem.png"
                 alt="MM2 Amethyst Gem"
                 width={450}
@@ -141,36 +84,16 @@ export function Hero() {
       {/* Wallet Popup Component */}
       {isWalletOpen && (
         <WalletPopup
-          items={items}
-          selectedItems={selectedItems}
-          handleItemClick={handleItemClick}
-          handleSelectAll={handleSelectAll}
-          handleWithdraw={handleWithdraw}
-          closeWalletPopup={closeWalletPopup} handleDeposit={function (): void {
-            throw new Error("Function not implemented.");
-          } } handleRedirect={function (): void {
-            throw new Error("Function not implemented.");
-          } }        />
-      )}
-
-      {/* Learn More Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 flex justify-center items-center bg-black/50 z-20">
-          <div className="bg-purple-800 p-6 rounded-lg max-w-lg w-full">
-            <h2 className="text-2xl font-bold mb-4">How to Deposit and Withdraw</h2>
-            <p className="text-lg mb-4">
-              To deposit items, simply select the items from your inventory and
-              click the Deposit button. The items will be added to your MM2
-              Amethyst account. To withdraw items, select the items you want to
-              withdraw and click Withdraw to initiate the transfer.
-            </p>
-            <div className="flex justify-end">
-              <Button onClick={closeModal} className="bg-purple-600 text-white">
-                Close
-              </Button>
-            </div>
-          </div>
-        </div>
+          userId="12345" // Replace with actual user ID
+          secret="85cb71959ba5a2df742a2b02a8fda42f75d484b495768da3a4dd9c8f5093cf1c" // Replace with actual secret
+          closeWalletPopup={closeWalletPopup}
+          items={[]} // Pass items dynamically if needed
+          selectedItems={[]} // Pass selected items dynamically if needed
+          handleItemClick={() => {}} // Replace with actual handler
+          handleSelectAll={() => {}} // Replace with actual handler
+          handleWithdraw={() => {}} // Replace with actual handler
+          handleDeposit={() => {}} // Replace with actual handler
+        />
       )}
     </section>
   );

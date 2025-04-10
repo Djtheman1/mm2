@@ -6,41 +6,38 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
 interface WalletPopupProps {
-  items: { name: string; rarity: string; image: string }[];
+  userId: string; // User ID for API calls
+  secret: string; // Secret for API authentication
+  closeWalletPopup: () => void;
+  items: { name: string; rarity: string; image: string }[]; // Inventory items
   selectedItems: string[];
   handleItemClick: (itemName: string) => void;
   handleSelectAll: () => void;
   handleWithdraw: () => void;
   handleDeposit: () => void;
-  handleRedirect: (type: string) => void;
-  closeWalletPopup: () => void;
 }
 
 export function WalletPopup({
+  userId,
+  secret,
+  closeWalletPopup,
   items,
   selectedItems,
   handleItemClick,
   handleSelectAll,
   handleWithdraw,
-  closeWalletPopup,
+  handleDeposit,
 }: WalletPopupProps) {
   const [showWithdrawNotification, setShowWithdrawNotification] = useState(false);
 
-  // Show notification when no items are selected for withdrawal
-  const handleWithdrawWithCheck = () => {
+  // Handle withdrawal notification
+  const handleWithdrawWithNotification = () => {
     if (selectedItems.length === 0) {
       setShowWithdrawNotification(true);
       setTimeout(() => setShowWithdrawNotification(false), 5000); // Hide after 5 seconds
       return;
     }
     handleWithdraw();
-  };
-
-  // Handle deposit (redirect to Roblox game URL)
-  const handleDepositWithCheck = () => {
-    // Redirect to the Roblox game URL for deposits, no need to check if items are selected
-    const robloxGameUrl = "https://www.roblox.com/games/YOUR_GAME_ID"; // Replace with the actual game URL
-    window.location.href = robloxGameUrl;
   };
 
   return (
@@ -87,7 +84,9 @@ export function WalletPopup({
             {items.map((item, index) => (
               <motion.div
                 key={index}
-                className={`bg-gradient-to-br from-indigo-900 to-purple-700 p-3 rounded-lg shadow-md transform transition-all duration-300 ${selectedItems.includes(item.name) ? "border-4 border-indigo-500" : ""}`}
+                className={`bg-gradient-to-br from-indigo-900 to-purple-700 p-3 rounded-lg shadow-md transform transition-all duration-300 ${
+                  selectedItems.includes(item.name) ? "border-4 border-indigo-500" : ""
+                }`}
                 whileHover={{ scale: 1.05 }}
                 onClick={() => handleItemClick(item.name)}
               >
@@ -110,24 +109,27 @@ export function WalletPopup({
           </div>
 
           {/* Buttons for Withdraw and Deposit */}
-          <div className="flex justify-center gap-6 mb-6">
+          <div className="flex justify-center items-center gap-6 mb-6">
             <Button
-              onClick={handleWithdrawWithCheck}
+              onClick={handleWithdrawWithNotification}
               className="bg-gradient-to-r from-pink-500 to-purple-600 text-white border-none shadow-lg hover:from-pink-600 hover:to-purple-700 w-32"
             >
               Withdraw
             </Button>
-            <div className="relative w-16">
+
+            {/* Gem PNG */}
+            <div className="relative w-16 h-16">
               <Image
-                src="/gem-logo.png"
+                src="/gem-logo.png" // Replace with the actual path to your gem PNG
                 alt="Gem Logo"
                 layout="fill"
                 objectFit="contain"
-                className="absolute top-0 left-0 drop-shadow-md"
+                className="drop-shadow-md"
               />
             </div>
+
             <Button
-              onClick={handleDepositWithCheck}  // Handle deposit and redirect
+              onClick={handleDeposit}
               className="bg-gradient-to-r from-pink-500 to-purple-600 text-white border-none shadow-lg hover:from-pink-600 hover:to-purple-700 w-32"
             >
               Deposit

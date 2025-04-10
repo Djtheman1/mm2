@@ -1,2 +1,10 @@
 import Lead from "@/components/lead/lead";
-export default Lead;
+import { Layout } from "@/components/layout/layout";
+export default function LeadPage() {
+    return (
+      <Layout>
+        <Lead />
+      </Layout>
+    )
+  }
+  

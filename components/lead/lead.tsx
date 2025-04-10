@@ -26,7 +26,7 @@ const leaderboardData: LeaderboardEntry[] = [
 const Leaderboard: FC = () => {
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-purple-900 to-indigo-900 text-white overflow-hidden">
-      <Sidebar />
+      
       
       <div className="flex-1 flex flex-col items-center p-6">
         <motion.header 
